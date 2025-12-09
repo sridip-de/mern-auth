@@ -1,5 +1,5 @@
 // Error handling middleware (at the end of your middleware chain)
-export const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
   
@@ -9,3 +9,5 @@ export const errorHandler = (err, req, res, next) => {
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
   });
 };
+
+export default errorHandler;

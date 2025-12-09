@@ -1,7 +1,7 @@
 // Import asyncHandler to handle async errors
-import asyncHandler from 'express-async-handler';
+import asyncHandler from '../utils/AsyncHandler.js';
 // import ApiError for custom error handling (not used in this snippet)
-import ApiError from '../utils/apiError.js';
+import ApiError from '../utils/ApiError.js';
 // Import ApiResponse for standardized API responses (not used in this snippet)
 import ApiResponse from '../utils/ApiResponse.js';
 // Import User model
@@ -21,28 +21,56 @@ const resister = asyncHandler(async (req, res, next) => {
   const { name, email, password,userName } = req.body;
 
   if (!name?.trim() || !email?.trim() || !password?.trim()) {
-    return next(new ApiError('All fields are required', 400));
+    return next(new ApiError(400,'All fields are required' ));
   }
 
   const userExists = await User.findOne({
-    $or: [{ email }, { userName }]
+    $or: [{ email }, { userName: userName.toLowerCase() }]
   })
 
   if (userExists) {
-    return next(new ApiError('Uer already exists', 400));
+    return next(new ApiError(400,'Uer already exists' ));
   }
 
-  const user = await User.create({ name, email, password, userName: userName.toLowerCase()});
-  
+  const user = await User.create({ name, email, password, userName: userName.toLowerCase() });
+
 
   const createdUser = await User.findById(user._id).select('-password -refreshToken');
 
-  if(!createdUser){
-    return next(new ApiError('User not created', 500));
+  if (!createdUser) {
+    return next(new ApiError(500,'User not created'));
   }
 
-  res.status(201).json(
-    new ApiResponse(201, createdUser, 'User created successfully')
+  const tokens = await user.generateAccessAndRefreshToken();
+
+  return res
+  .cookie(
+    'tokens',tokens,
+    {
+      httpOnly: true, // accessible only by web server 
+      secure: process.env.NODE_ENV === 'production', // https only in production
+      sameSite: 'Strict', // cross-site cookie not sent 
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    }
   )
+    .status(201)
+    .json(
+      new ApiResponse(201, createdUser, 'User created successfully')
+    )
 
 });
+
+const login = asyncHandler(async (req, res, next) => {
+
+  const { email, password } = req.body;
+
+  if (!email?.trim() || !password?.trim()) {
+    return next(new ApiError(400,'All fields are required'));
+  }
+
+  const user = await User.findOne({ email });
+});
+
+export {
+  resister,
+};
