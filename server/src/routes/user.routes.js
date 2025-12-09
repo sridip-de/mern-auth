@@ -1,8 +1,12 @@
 import express from 'express';
-import { resister } from '../controllers/authController.js';
+import { 
+  register,
+  login
+} from '../controllers/authController.js';
 
 const userRouter = express.Router();
 
-userRouter.post('/register', resister);
+userRouter.post('/register', register);
+userRouter.post('/login', login);
 
 export default userRouter;

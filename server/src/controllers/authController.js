@@ -16,7 +16,7 @@ import User from '../models/userModel.js';
 // remove the password and refreshToken from the response
 // send the response to the user
 
-const resister = asyncHandler(async (req, res, next) => {
+const register = asyncHandler(async (req, res, next) => {
 
   const { name, email, password,userName } = req.body;
 
@@ -44,22 +44,30 @@ const resister = asyncHandler(async (req, res, next) => {
   const tokens = await user.generateAccessAndRefreshToken();
 
   return res
-  .cookie(
-    'tokens',tokens,
-    {
-      httpOnly: true, // accessible only by web server 
-      secure: process.env.NODE_ENV === 'production', // https only in production
-      sameSite: 'Strict', // cross-site cookie not sent 
+    .cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    }
-  )
+    })
+    .cookie('accessToken', tokens.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 15 * 60 * 1000, // 15 minutes
+    })
     .status(201)
-    .json(
-      new ApiResponse(201, createdUser, 'User created successfully')
-    )
+    .json(new ApiResponse(201,{ user: createdUser }, 'User registered successfully'));
 
 });
 
+// 1. Get user credentials from the frontend
+// 2. Validate user credentials (email & password )
+// 3. Check if user exists (using email)
+// 4. Compare the password using bcrypt
+// 5. Generate tokens (JWT)
+// 6. Remove the password and refreshToken from the response
+// 7. Send the response to the user
 const login = asyncHandler(async (req, res, next) => {
 
   const { email, password } = req.body;
@@ -69,8 +77,39 @@ const login = asyncHandler(async (req, res, next) => {
   }
 
   const user = await User.findOne({ email });
+
+  if (!user) return next(new ApiError(404, 'User not found'));
+
+  const isPasswordValid = await user.comparePassword(password);
+
+  if (!isPasswordValid) return next(new ApiError(401, 'Invalid credentials'));
+
+  const tokens = await user.generateAccessAndRefreshToken();
+
+  const userData = await User.findById(user._id).select(
+    '-password -refreshToken -verifyOtp -verifyOtpExpireAt'
+  );
+
+  return res
+    .cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    })
+    .cookie('accessToken', tokens.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 15 * 60 * 1000, // 15 minutes
+    })
+    .status(201)
+    .json(new ApiResponse(201,{ user: userData }, 'User registered successfully'));
+  
+
 });
 
 export {
-  resister,
+  register,
+  login,
 };
