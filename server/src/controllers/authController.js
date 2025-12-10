@@ -49,6 +49,7 @@ const register = asyncHandler(async (req, res, next) => {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      path:'/api/users/refresh-token',
     })
     .cookie('accessToken', tokens.accessToken, {
       httpOnly: true,
@@ -96,6 +97,7 @@ const login = asyncHandler(async (req, res, next) => {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      path:'/api/users/refresh-token',
     })
     .cookie('accessToken', tokens.accessToken, {
       httpOnly: true,
@@ -109,7 +111,31 @@ const login = asyncHandler(async (req, res, next) => {
 
 });
 
+// Find the user
+// 
+
+const logout = asyncHandler(async (req,res,next) => {
+  
+  //await User.findByIdAndUpdate(req.user._id, { refreshToken: "" });
+
+  return res 
+  .clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path:'/api/users/refresh-token',
+  })
+  .clearCookie('accessToken', { 
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  })
+  .status(200)
+  .json(new ApiResponse(200, null, 'Logged out successfully'));
+});
+
 export {
   register,
   login,
+  logout,
 };
