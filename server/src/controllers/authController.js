@@ -6,6 +6,8 @@ import ApiError from '../utils/ApiError.js';
 import ApiResponse from '../utils/ApiResponse.js';
 // Import User model
 import User from '../models/userModel.js';
+// Import transporter from nodemailer configuration
+import transporter from '../configs/nodeMailer.config.js'
 
 // get user details form the forntend
 // validate user credentials (email & password )
@@ -42,6 +44,16 @@ const register = asyncHandler(async (req, res, next) => {
   }
 
   const tokens = await user.generateAccessAndRefreshToken();
+
+  // Sending Welcome Message
+  const mailOptions = {
+    from: process.env.SMTP_USER,
+    to: createdUser.email,
+    subject: 'Hurrah! You are registered',
+    text: `Welcome to our platform, ${createdUser.name}! We're excited to have you on board.`
+  }
+
+  await transporter.sendMail(mailOptions);
 
   return res
     .cookie('refreshToken', tokens.refreshToken, {
