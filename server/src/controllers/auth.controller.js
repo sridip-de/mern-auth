@@ -1,7 +1,7 @@
 // Import asyncHandler to handle async errors
 import asyncHandler from '../utils/AsyncHandler.js';
 // import ApiError for custom error handling (not used in this snippet)
-import ApiError from '../utils/ApiError.js';
+import ApiError from '../utils/apiError.constructor.js';
 // Import ApiResponse for standardized API responses (not used in this snippet)
 import ApiResponse from '../utils/ApiResponse.js';
 // Import User model
@@ -49,8 +49,9 @@ const register = asyncHandler(async (req, res, next) => {
   const mailOptions = {
     from: process.env.SMTP_USER,
     to: createdUser.email,
-    subject: 'Hurrah! You are registered',
-    text: `Welcome to our platform, ${createdUser.name}! We're excited to have you on board.`
+    subject: 'Project Report Submission - Sreedeep Kumar Dey',
+    //text: `Welcome to our platform, ${createdUser.name}! We're excited to have you on board.`,
+    html: ``
   }
 
   await transporter.sendMail(mailOptions);
