@@ -8,6 +8,8 @@ import ApiResponse from '../utils/ApiResponse.js';
 import User from '../models/userModel.js';
 // Import transporter from nodemailer configuration
 import transporter from '../configs/nodeMailer.config.js'
+// Import cookie options 
+import COOKIE_OPTIONS from '../constants/cookieOptions.constants.js';
 
 // get user details form the forntend
 // validate user credentials (email & password )
@@ -57,19 +59,8 @@ const register = asyncHandler(async (req, res, next) => {
   await transporter.sendMail(mailOptions);
 
   return res
-    .cookie('refreshToken', tokens.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      path:'/api/users/refresh-token',
-    })
-    .cookie('accessToken', tokens.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000, // 15 minutes
-    })
+    .cookie('refreshToken', tokens.refreshToken,COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
+    .cookie('accessToken', tokens.accessToken,COOKIE_OPTIONS.ACCESS_TOKEN_OPTIONS)
     .status(201)
     .json(new ApiResponse(201,{ user: createdUser }, 'User registered successfully'));
 
@@ -105,19 +96,8 @@ const login = asyncHandler(async (req, res, next) => {
   );
 
   return res
-    .cookie('refreshToken', tokens.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      path:'/api/users/refresh-token',
-    })
-    .cookie('accessToken', tokens.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000, // 15 minutes
-    })
+    .cookie('refreshToken', tokens.refreshToken, COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
+    .cookie('accessToken', tokens.accessToken, COOKIE_OPTIONS.ACCESS_TOKEN_OPTIONS)
     .status(201)
     .json(new ApiResponse(201,{ user: userData }, 'User registered successfully'));
   
@@ -132,17 +112,8 @@ const logout = asyncHandler(async (req,res,next) => {
   //await User.findByIdAndUpdate(req.user._id, { refreshToken: "" });
 
   return res 
-  .clearCookie('refreshToken', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    path:'/api/users/refresh-token',
-  })
-  .clearCookie('accessToken', { 
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-  })
+  .clearCookie('refreshToken', COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
+  .clearCookie('accessToken', COOKIE_OPTIONS.ACCESS_TOKEN_OPTIONS)
   .status(200)
   .json(new ApiResponse(200, null, 'Logged out successfully'));
 });
