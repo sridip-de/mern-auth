@@ -123,7 +123,6 @@ const sendVerifyOtp = asyncHandler(async (req, res, next) => {
   if (user.isVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
 
   const otp = generateOtp();
-  console.log(otp)
 
   user.verifyOtp = otp;
   user.verifyOtpExpireAt = Date.now() + 10 * 60 * 1000;
@@ -141,15 +140,17 @@ const sendVerifyOtp = asyncHandler(async (req, res, next) => {
 const verifyOtp = asyncHandler(async (req, res, next) => {
 
   const userId = req.user._id;
+
   const { otp } = req.body;
-  // check if otp is valid
-  if (!otp) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP); 
   
   const user = await User.findById(userId);
   // check is user exists
   if (!user) throw new ApiError(404, ERROR_MESSAGE.USER.NOT_FOUND);
   // check if user already verified
   if(user.isVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
+  // check if otp is valid
+  if (!otp) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP); 
+  
   // Match the OTP
   if (user.verifyOtp !== otp) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP);
   // Check if OTP is expired
