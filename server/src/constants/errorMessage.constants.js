@@ -7,6 +7,13 @@ const ERROR_MESSAGE = {
     USER_NOT_FOUND: "User accaunt not found. Please login again",
     UNAUTHORIZED: "You are not authorized to perform this action",
   },
+
+  // OTP Errors
+  OTP: {
+    INVALID_OTP: "The provided OTP is invalid",
+    EXPIRED_OTP: "The provided OTP has expired",  
+    OTP_SEND_FAILED: "Failed to send OTP. Please try again later",
+  },
   
   // User Errors
   USER: {

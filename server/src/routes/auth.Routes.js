@@ -1,14 +1,20 @@
 import express from 'express';
-import { 
+import authMiddleware from '../middlewares/auth.middleware.js';
+
+import {
   register,
   login,
   logout,
-} from '../controllers/authController.js';
+  sendVerifyOtp,
+  verifyOtp,
+} from '../controllers/auth.controller.js';
 
-const userRouter = express.Router();
+const authRouter = express.Router();
 
-userRouter.post('/register', register);
-userRouter.post('/login', login);
-userRouter.post('/logout', logout);
+authRouter.post('/register', register);
+authRouter.post('/login', login);
+authRouter.post('/logout', authMiddleware, logout);
+authRouter.post('/send-verify-otp', authMiddleware, sendVerifyOtp);
+authRouter.post('/verify-otp',authMiddleware, verifyOtp);
 
-export default userRouter;
+export default authRouter;

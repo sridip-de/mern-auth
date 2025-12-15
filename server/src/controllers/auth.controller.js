@@ -3,7 +3,7 @@ import asyncHandler from '../utils/AsyncHandler.js';
 // import ApiError for custom error handling (not used in this snippet)
 import ApiError from '../utils/apiError.constructor.js';
 // Import ApiResponse for standardized API responses (not used in this snippet)
-import ApiResponse from '../utils/ApiResponse.js';
+import ApiResponse from '../utils/apiResponse.constructor.js';
 // Import User model
 import User from '../models/userModel.js';
 // Import transporter from nodemailer configuration
@@ -54,15 +54,7 @@ const register = asyncHandler(async (req, res, next) => {
   const tokens = await user.generateAccessAndRefreshToken();
 
   // Sending Welcome Message
-  const mailOptions = {
-    from: process.env.SMTP_USER,
-    to: createdUser.email,
-    subject: 'Project Report Submission - Sreedeep Kumar Dey',
-    //text: `Welcome to our platform, ${createdUser.name}! We're excited to have you on board.`,
-    html: ``
-  }
-
-  await transporter.sendMail(mailOptions);
+  await EMAIL_SERVICE.sendWelcomeEmail(createdUser.email, createdUser.name);
 
   return res
     .cookie('refreshToken', tokens.refreshToken,COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
@@ -129,22 +121,59 @@ const sendVerifyOtp = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
 
   const user = await User.findById(userId);
-
+  // check wheather user is already verified
   if (user.isVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
 
   const otp = generateOtp();
+  console.log(otp)
 
   user.verifyOtp = otp;
   user.verifyOtpExpireAt = Date.now() + 10 * 60 * 1000;
 
   await user.save();
 
-  await EMAIL_SERVICE.sendVerificationEmail(user.email, user.name);
+  await EMAIL_SERVICE.sendVerificationEmail(user.email, user.verifyOtp, user.name);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, 'Verification OTP sent to your email'));
+})
+
+// Verify OTP and verify the user's email
+const verifyOtp = asyncHandler(async (req, res, next) => {
+
+  const userId = req.user._id;
+  const { otp } = req.body;
+  // check if otp is valid
+  if (!otp?.trim() || otp.length !== 6) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP); 
+  
+  const user = await User.findById(userId);
+  // check is user exists
+  if (!user) throw new ApiError(404, ERROR_MESSAGE.USER.NOT_FOUND);
+  // check if user already verified
+  if(user.isVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
+  // Match the OTP
+  if (user.verifyOtp !== otp) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP);
+  // Check if OTP is expired
+  if (user.verifyOtpExpireAt < Date.now()) throw new ApiError(400, ERROR_MESSAGE.OTP.OTP_EXPIRED);
+
+  user.isAccountVerified = true;
+  user.verifyOtp = null;
+  user.verifyOtpExpireAt = 0;
+
+  await user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "Email verified successfully"));
+
+
 })
 
 export {
   register,
   login,
   logout,
-  sendVerifyOtp
+  sendVerifyOtp,
+  verifyOtp,
 };

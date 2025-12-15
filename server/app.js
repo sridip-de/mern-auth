@@ -10,12 +10,12 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 // Imort Routes
-import userRouter from './src/routes/auth.Routes.js';
+import authRouter from './src/routes/auth.Routes.js';
 
 //app.use('/',(req,res,next)=>{res.send("okay running")})
 
 // Use Routes
-app.use('/api/users', userRouter);
+app.use('/api/users', authRouter);
 
 // Global Error Handler Middleware
 import errorHandler from './src/middlewares/errorHandler.js';

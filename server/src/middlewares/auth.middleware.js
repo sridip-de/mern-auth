@@ -1,20 +1,22 @@
-import asyncHandler from "../utils/AsyncHandler";
+import asyncHandler from "../utils/AsyncHandler.js";
 import jwt from "jsonwebtoken";
-import User from "../models/userModel";
-import ApiError from "../utils/apiError.constructor";
-import ERROR_MESSAGE from "../constants/errorMessage.constants";
+import User from "../models/userModel.js";
+import ApiError from "../utils/apiError.constructor.js";
+import ERROR_MESSAGE from "../constants/errorMessage.constants.js";
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
 
+  console.log(process.env.ACCESS_TOKEN_SECRET)
   const token = req.cookies?.accessToken;
   
-  const decoded = null;
+  if (!token) throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_MISSING);
+
+  let decoded;
+
 
   try {
 
-    if (!token) throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_MISSING);
-  
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);    
+    decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);  
     
   } catch (error) {
     
@@ -22,18 +24,17 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
       throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_EXPIRED);
     }
 
-    if (error.name === "JsonWebTokenError") {
-      throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID);
-    }
-
-    if (error.name === "NotBeforeError") {
+    if (error.name === "JsonWebTokenError" || error.name === "NotBeforeError") {
       throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID);
     }
 
     throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID);
   }
 
-  const user = await User.findById(decoded.id).select("-password -refreshToken");
+  console.log("Decoded Token:", decoded);
+  //if(!decoded || !decoded.id) throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID);
+
+  const user = await User.findById(decoded._id).select("-password -refreshToken");
 
   if (!user) throw new ApiError(401, ERROR_MESSAGE.AUTH.USER_NOT_FOUND);
 
