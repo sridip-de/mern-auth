@@ -13,7 +13,8 @@ const ERROR_MESSAGE = {
     NOT_FOUND: "User not found",
     ALREADY_EXISTS: "Invalid email or password",
     INVALID_CREDENTIALS: "Invalid email or password",
-    EMAIL_NOT_VERIFIED: "Please verify your email address"
+    EMAIL_NOT_VERIFIED: "Please verify your email address",
+    EMAIL_ALREADY_VERIFIED: "Email address is already verified",
   },
 
   // Server Errors

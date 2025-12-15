@@ -10,6 +10,12 @@ import User from '../models/userModel.js';
 import transporter from '../configs/nodeMailer.config.js'
 // Import cookie options 
 import COOKIE_OPTIONS from '../constants/cookieOptions.constants.js';
+// Import error messages
+import ERROR_MESSAGE from '../constants/errorMessage.constants.js';
+// Import generateOtp utility (not used in this snippet)
+import generateOtp from '../utils/generateOtp.js';
+// Import email service
+import EMAIL_SERVICE from '../services/emailService.js';
 
 // get user details form the forntend
 // validate user credentials (email & password )
@@ -105,7 +111,6 @@ const login = asyncHandler(async (req, res, next) => {
 });
 
 // Find the user
-// 
 
 const logout = asyncHandler(async (req,res,next) => {
   
@@ -118,8 +123,28 @@ const logout = asyncHandler(async (req,res,next) => {
   .json(new ApiResponse(200, null, 'Logged out successfully'));
 });
 
+// Send Verification OTP to the User's Email
+const sendVerifyOtp = asyncHandler(async (req, res, next) => {
+
+  const userId = req.user._id;
+
+  const user = await User.findById(userId);
+
+  if (user.isVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
+
+  const otp = generateOtp();
+
+  user.verifyOtp = otp;
+  user.verifyOtpExpireAt = Date.now() + 10 * 60 * 1000;
+
+  await user.save();
+
+  await EMAIL_SERVICE.sendVerificationEmail(user.email, user.name);
+})
+
 export {
   register,
   login,
   logout,
+  sendVerifyOtp
 };
