@@ -7,8 +7,6 @@ import ApiResponse from '../utils/apiResponse.constructor.js';
 // Import User model
 import User from '../models/userModel.js';
 // Import transporter from nodemailer configuration
-import transporter from '../configs/nodeMailer.config.js'
-// Import cookie options 
 import COOKIE_OPTIONS from '../constants/cookieOptions.constants.js';
 // Import error messages
 import ERROR_MESSAGE from '../constants/errorMessage.constants.js';
@@ -145,7 +143,7 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
   const { otp } = req.body;
   // check if otp is valid
-  if (!otp?.trim() || otp.length !== 6) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP); 
+  if (!otp) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP); 
   
   const user = await User.findById(userId);
   // check is user exists
@@ -162,6 +160,8 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
   user.verifyOtpExpireAt = 0;
 
   await user.save();
+
+  await EMAIL_SERVICE.sendEmailVerifiedConfirmation(user.email, user.name)
 
   return res
     .status(200)
