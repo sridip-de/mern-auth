@@ -11,11 +11,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // Imort Routes
 import authRouter from './src/routes/auth.Routes.js';
+import userRouter from './src/routes/user.Routes.js'
 
 //app.use('/',(req,res,next)=>{res.send("okay running")})
 
 // Use Routes
-app.use('/api/users', authRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 // Global Error Handler Middleware
 import errorHandler from './src/middlewares/errorHandler.js';

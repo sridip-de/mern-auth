@@ -142,17 +142,18 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
 
   const { otp } = req.body;
+
+  // check if otp is valid
+  if (!otp || !/^\d{6}$/.test(otp)) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP); 
   
   const user = await User.findById(userId);
   // check is user exists
   if (!user) throw new ApiError(404, ERROR_MESSAGE.USER.NOT_FOUND);
   // check if user already verified
-  if(user.isVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
-  // check if otp is valid
-  if (!otp) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP); 
+  if(user.isAccountVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
   
   // Match the OTP
-  if (user.verifyOtp !== otp) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP);
+  if (user.verifyOtp !== otp) throw new ApiError(400, ERROR_MESSAGE.OTP.WRONG_OTP);
   // Check if OTP is expired
   if (user.verifyOtpExpireAt < Date.now()) throw new ApiError(400, ERROR_MESSAGE.OTP.OTP_EXPIRED);
 
@@ -169,6 +170,16 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, null, "Email verified successfully"));
 
 
+})
+
+// Send Password Reset OTP to the User's Email
+const sendPasswordResetOtp = asyncHandler(async (req, res, next) => {
+
+})
+
+// Reset Password route
+const resetOtp = asyncHandler(async (req, res, next)=> {
+  
 })
 
 export {

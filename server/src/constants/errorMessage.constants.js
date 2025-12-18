@@ -13,6 +13,8 @@ const ERROR_MESSAGE = {
     INVALID_OTP: "The provided OTP is invalid",
     EXPIRED_OTP: "The provided OTP has expired",  
     OTP_SEND_FAILED: "Failed to send OTP. Please try again later",
+    WRONG_OTP: "The provided OTP is incorrect",
+    TOO_MANY_REQUESTS: "Too many OTP requests. Please try again later",
   },
   
   // User Errors
