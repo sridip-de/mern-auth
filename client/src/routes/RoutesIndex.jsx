@@ -1,0 +1,43 @@
+import { createBrowserRouter } from "react-router";
+import  { RouterProvider } from "react-router/dom";
+
+import MainLayout from "../components/layout/MainLayout"
+import Home from "../pages/Home";
+import Login from "../pages/Login";
+import Singup from "../pages/Register"
+import NotFound from "../pages/NotFound"
+import EmailVerify from "../pages/EmailVerify";
+
+import APP_ROUTES from "../constants/app.routes"
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        path: APP_ROUTES.HOME,
+        element: <Home />
+      },
+      {
+        path: APP_ROUTES.LOGIN,
+        element: <Login />
+      },
+      {
+        path: APP_ROUTES.REGISTER,
+        element: <Singup />
+      },
+      {
+        path: APP_ROUTES.EMAIL_VERIFY,
+        element: <EmailVerify />
+      }
+    ]
+  }
+])
+
+function AppRouter() {
+  return <RouterProvider router={router} />
+}
+
+export default AppRouter;
