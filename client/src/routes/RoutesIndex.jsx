@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, redirect } from "react-router";
 import  { RouterProvider } from "react-router/dom";
 
 import MainLayout from "../components/layout/MainLayout"
@@ -9,12 +9,14 @@ import NotFound from "../pages/NotFound"
 import EmailVerify from "../pages/EmailVerify";
 
 import APP_ROUTES from "../constants/app.routes"
+import requireGuest from "../routes/loaders/requireGuest"
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
     errorElement: <NotFound />,
+    
     children: [
       {
         path: APP_ROUTES.HOME,
@@ -22,7 +24,8 @@ const router = createBrowserRouter([
       },
       {
         path: APP_ROUTES.LOGIN,
-        element: <Login />
+        element: <Login />,
+        loader: requireGuest,
       },
       {
         path: APP_ROUTES.REGISTER,

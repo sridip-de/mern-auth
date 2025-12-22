@@ -2,9 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
+import CORS_CONFIG from './src/configs/cors.config.js'
+
 const app = express();
 // Middleware setup
-app.use(cors({credentials: true}));
+app.use(cors(CORS_CONFIG));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));

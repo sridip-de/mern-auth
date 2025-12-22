@@ -5,7 +5,7 @@ const API_ENDPOINTS = {
     LOGOUT: '/auth/logout',
   },
   USER_ENDPOINT: {
-    GET_PROFILE: '/api/user/profile',
+    GET_USER: '/user/data',
 
   }
 }

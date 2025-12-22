@@ -79,11 +79,11 @@ const login = asyncHandler(async (req, res, next) => {
 
   const user = await User.findOne({ email });
 
-  if (!user) return next(new ApiError(404, 'User not found'));
+  if (!user) return next(new ApiError(404, ERROR_MESSAGE.USER.NOT_FOUND));
 
   const isPasswordValid = await user.comparePassword(password);
 
-  if (!isPasswordValid) return next(new ApiError(401, 'Invalid credentials'));
+  if (!isPasswordValid) return next(new ApiError(401, ERROR_MESSAGE.USER.INVALID_CREDENTIALS));
 
   const tokens = await user.generateAccessAndRefreshToken();
 
