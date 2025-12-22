@@ -48,4 +48,4 @@ src/
 
 
 ✅ Summary
-Folder TypeUse index.js?Reasonloaders/ (5+)✅ YesMultiple loaders imported togetherutils/ (5+)✅ YesMultiple utilities used togetherhooks/ (5+)✅ YesMultiple hooks used togetherconstants/ (5+)✅ YesMultiple constants imported togetherpages/❌ NoPages imported individuallycomponents/❌ Usually NoComponents imported individuallyservices/ (2-3)❌ NoFew services, direct import clearercontexts/❌ NoEach context is distinct
+Folder TypeUse index.js?Reasonloaders/ (5+)✅ YesMultiple loaders imported togetherutils/ (5+)✅ YesMultiple >utilities used togetherhooks/ (5+)✅ YesMultiple >hooks used togetherconstants/ (5+)✅ YesMultiple constants imported togetherpages/❌ NoPages imported individuallycomponents/❌ Usually NoComponents imported individuallyservices/ (2-3)❌ NoFew services, direct import clearercontexts/❌ NoEach context is distinct

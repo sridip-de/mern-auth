@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState,useCallback} from 'react';
 
 import {toast} from 'react-toastify'
 import userService from '../services/userService'
@@ -6,8 +6,11 @@ import userService from '../services/userService'
 export const AuthContext = createContext(null);
 
 const AuthContextProvider = ({children}) => {
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+
+  
 
   useEffect(()=>{
     getUserData();
@@ -31,8 +34,7 @@ const AuthContextProvider = ({children}) => {
 
   const value = {
     isLoggedIn, setIsLoggedIn,
-    user, setUser,
-    getUserData
+    user,setUser
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

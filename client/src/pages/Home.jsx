@@ -1,9 +1,14 @@
 import { useAuth } from "../contexts/AuthContext"
 
+import { useGetUser } from '../hooks/query/user.query'
+
 const Home = () => {
 
-  const {user} = useAuth();
+  const { data, isLoading} = useGetUser();
+  console.log(data)
+  const user = data?.data?.data;
 
+  if(isLoading) return "loading"
   return (
     <div className="
       bg-zinc-800
