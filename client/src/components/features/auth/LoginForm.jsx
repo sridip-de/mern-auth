@@ -1,13 +1,13 @@
 import { NavLink, useNavigate } from "react-router"
 import { useContext, useState } from "react"
 
-import authService from "../../../services/authService"
+import authService from '../../../services/authService'
 import { AuthContext } from "../../../contexts/AuthContext"
 import { toast } from "react-toastify"
 
 const LoginForm = () => {
 
-  const { setIsLoggedIn, setUser } = useContext(AuthContext)
+  const { setIsLoggedIn, setUser } = useContext(AuthContext);
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -27,9 +27,9 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-
+      console.log('entered')
       const response = await authService.userLogin(loginData)
-
+      console.log(response)
       if (response.data.success) {
         toast(response.data.message)
         setIsLoggedIn(true)
@@ -42,7 +42,7 @@ const LoginForm = () => {
       }
 
     } catch (error) {
-      toast(error.response?.data?.message || "login failed")
+      toast(error.response?.data?.message || "Failed Login Error in Handle Submit")
     }
   }
 

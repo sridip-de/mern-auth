@@ -1,14 +1,10 @@
-import { useAuth } from "../contexts/AuthContext"
-
-import { useGetUser } from '../hooks/query/user.query'
+import { useAuthContext } from "../contexts/AuthContext"
 
 const Home = () => {
 
-  const { data, isLoading} = useGetUser();
-  console.log(data)
-  const user = data?.data?.data;
+  const { user } = useAuthContext();
+  console.log(user)
 
-  if(isLoading) return "loading"
   return (
     <div className="
       bg-zinc-800
@@ -21,7 +17,7 @@ const Home = () => {
         text-5xl text-zinc-100
         mb-8
       ">
-        👋️ Hey! {user? user.name : "Developer"}
+        👋️ Hey! {user ? user.name : "Developer"}
       </div>
       <button className="
         px-4 py-2

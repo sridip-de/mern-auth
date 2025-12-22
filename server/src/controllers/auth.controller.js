@@ -95,7 +95,7 @@ const login = asyncHandler(async (req, res, next) => {
     .cookie('refreshToken', tokens.refreshToken, COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
     .cookie('accessToken', tokens.accessToken, COOKIE_OPTIONS.ACCESS_TOKEN_OPTIONS)
     .status(201)
-    .json(new ApiResponse(201,{ user: userData }, 'User registered successfully'));
+    .json(new ApiResponse(201,{ user: userData }, 'Login successful'));
   
 
 });

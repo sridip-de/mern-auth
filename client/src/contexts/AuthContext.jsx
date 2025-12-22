@@ -42,7 +42,7 @@ const AuthContextProvider = ({children}) => {
 
 // Abstruction code 
 // It reduces the need of importation of two useContext and Authcontext in each file
-export const useAuth = () => {
+export const useAuthContext = () => {
   const context = useContext(AuthContext);
   if(!context) throw Error('useauth must be used within AuthContextProvider');
   return context;
