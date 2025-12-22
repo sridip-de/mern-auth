@@ -9,7 +9,8 @@ import NotFound from "../pages/NotFound"
 import EmailVerify from "../pages/EmailVerify";
 
 import APP_ROUTES from "../constants/app.routes"
-import requireGuest from "../routes/loaders/requireGuest"
+
+import { requireGuest } from "./loaders";
 
 const router = createBrowserRouter([
   {
