@@ -1,26 +1,23 @@
 import { redirect } from "react-router";
 import userService from "../../services/userService";
 import APP_ROUTES from "../../constants/app.routes";
-import { toast } from "react-toastify";
+
 
 async function requireGuest () {
   try {
     const res = await userService.getUser();
   
-    console.log(res.data.success)
   
-    if(res.data?.success){
+    if(res.data?.success ){
       throw redirect(APP_ROUTES.HOME);
     } 
   
-    return null;
+    //return null;
 
   } catch (error) {
     if (error instanceof Response) {
       throw error; // Let React Router handle the redirect
     }
-
-    return null
   }
 }
 

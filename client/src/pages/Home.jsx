@@ -1,9 +1,8 @@
-import { useContext } from "react"
-import { AuthContext } from "../contexts/AuthContext"
+import { useAuth } from "../contexts/AuthContext"
 
 const Home = () => {
 
-  const {user} = useContext(AuthContext);
+  const {user} = useAuth();
 
   return (
     <div className="

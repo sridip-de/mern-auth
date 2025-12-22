@@ -1,4 +1,4 @@
-import {createContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 
 import {toast} from 'react-toastify'
 import userService from '../services/userService'
@@ -36,6 +36,14 @@ const AuthContextProvider = ({children}) => {
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+}
+
+// Abstruction code 
+// It reduces the need of importation of two useContext and Authcontext in each file
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if(!context) throw Error('useauth must be used within AuthContextProvider');
+  return context;
 }
 
 export default AuthContextProvider;

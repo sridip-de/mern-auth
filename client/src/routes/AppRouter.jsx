@@ -10,7 +10,7 @@ import EmailVerify from "../pages/EmailVerify";
 
 import APP_ROUTES from "../constants/app.routes"
 
-import { requireGuest } from "./loaders";
+import { requireGuest, requireAuth } from "./loaders";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +21,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: APP_ROUTES.HOME,
-        element: <Home />
+        element: <Home />,
+        loader: requireAuth,
       },
       {
         path: APP_ROUTES.LOGIN,
