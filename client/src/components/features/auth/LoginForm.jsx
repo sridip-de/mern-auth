@@ -1,13 +1,14 @@
 import { NavLink, useNavigate } from "react-router"
-import { useContext, useState } from "react"
+import { useState } from "react"
 
 import authService from '../../../services/authService'
-import { AuthContext } from "../../../contexts/AuthContext"
+import { useAuthContext } from "../../../contexts/AuthContext"
 import { toast } from "react-toastify"
+import { useMutation } from "@tanstack/react-query"
 
 const LoginForm = () => {
 
-  const { setIsLoggedIn, setUser } = useContext(AuthContext);
+  const { queryClient } = useAuthContext();
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -24,26 +25,28 @@ const LoginForm = () => {
     }))
   }
 
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      console.log('entered')
-      const response = await authService.userLogin(loginData)
-      console.log(response)
+  const loginMutation = useMutation({
+    mutationFn: authService.userLogin,
+    onSuccess: (response) => {
       if (response.data.success) {
-        toast(response.data.message)
-        setIsLoggedIn(true)
-        setUser(response.data.data.user)
+        toast.success(response.data.message)
+        queryClient.invalidateQueries({ queryKey: ['user'] });
         setLoginData({
           email: "",
           password: ""
         })
         navigate("/")
       }
-
-    } catch (error) {
-      toast(error.response?.data?.message || "Failed Login Error in Handle Submit")
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Failed Login Error")
     }
+  })
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('entered')
+    loginMutation.mutate(loginData)
   }
 
 

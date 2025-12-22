@@ -1,40 +1,32 @@
 import {createContext, useContext, useEffect, useState,useCallback} from 'react';
 
 import {toast} from 'react-toastify'
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import userService from '../services/userService'
 
 export const AuthContext = createContext(null);
 
 const AuthContextProvider = ({children}) => {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const queryClient = useQueryClient();
 
-  
-
-  useEffect(()=>{
-    getUserData();
-  },[])
-
-  const getUserData = async () => {
-    try {
-
-      const response = await userService.getUser()
-      
-      if(response.data.success) {
-        setIsLoggedIn(true);
-        setUser(response.data.data)
-      } else {
-        setIsLoggedIn(false);
-      }
-    } catch (error) {
-        toast(error.response?.data?.message)
+  const { data: userData, isLoading, error } = useQuery({
+    queryKey: ['user'],
+    queryFn: userService.getUser,
+    retry: false,
+    onError: (error) => {
+      toast(error.response?.data?.message || 'Failed to fetch user');
     }
-  }
+  });
+
+  const isLoggedIn = !!userData?.data?.success;
+  const user = userData?.data?.data;
 
   const value = {
-    isLoggedIn, setIsLoggedIn,
-    user,setUser
+    isLoggedIn,
+    user,
+    isLoading,
+    queryClient
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

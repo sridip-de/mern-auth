@@ -1,22 +1,26 @@
 import { redirect } from "react-router";
+import { queryClient } from "../../config/query.config";
 import userService from "../../services/userService";
-async function requireAuth (){
+
+async function requireAuth() {
   try {
+    const data = await queryClient.fetchQuery({
+      queryKey: ['user'],
+      queryFn: userService.getUser,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    });
 
-    const res = await userService.getUser();
-
-    if (!res.data?.success) {
-      throw redirect('/login')
+    if (!data.data?.success) {
+      throw redirect('/login');
     }
 
+    return data;
   } catch (error) {
-    
-    // Check: Is this a "authentication" error?
-    if(error.response?.status === 401) throw redirect('/login');
-    
-    // Not sure may be wifi down or other erros let the
-    return null
-
+    if (error.response?.status === 401 || error instanceof Response) {
+      throw redirect('/login');
+    }
+    // For other errors, allow access or handle differently
+    return null;
   }
 }
 

@@ -1,27 +1,32 @@
 import { redirect } from "react-router";
+import { queryClient } from "../../config/query.config";
 import userService from "../../services/userService";
 import APP_ROUTES from "../../constants/app.routes";
 
-
-async function requireGuest () {
+async function requireGuest() {
   try {
-    const res = await userService.getUser();
-  
-  
-    if(res.data?.success ){
-      throw redirect(APP_ROUTES.HOME);
-    } 
-  
-    //return null;
+    const data = await queryClient.fetchQuery({
+      queryKey: ['user'],
+      queryFn: userService.getUser,
+      staleTime: 1000 * 60 * 5,
+    });
 
+    if (data.data?.success) {
+      throw redirect(APP_ROUTES.HOME);
+    }
+
+    return null;
   } catch (error) {
     if (error instanceof Response) {
       throw error; // Let React Router handle the redirect
     }
+    // If error fetching user (e.g., not logged in), allow access to guest routes
+    return null;
   }
 }
 
 export default requireGuest;
+
 
 
 //===================================================================================
