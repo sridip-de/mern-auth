@@ -1,10 +1,8 @@
-import { useAuthContext } from "../contexts/AuthContext"
-
-//import { useFetchUser } from "../hooks/queries/use.auth.query";
+import { useFetchUser } from "../hooks/queries/use.auth.query";
 
 const Home = () => {
 
-  const {  user } = useAuthContext();
+  const { data: user, isLoading, error } = useFetchUser();
 
   return (
     <div className="
@@ -18,7 +16,7 @@ const Home = () => {
         text-5xl text-zinc-100
         mb-8
       ">
-        👋️ Hey! {user ? user.name : "Developer"}
+        👋️ Hey! {user?.data ? user.data.data.name : "Developer"}
       </div>
       <button className="
         px-4 py-2
