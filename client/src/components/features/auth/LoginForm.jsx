@@ -1,10 +1,8 @@
 import { NavLink, useNavigate } from "react-router"
 import { useState } from "react"
 
-import authService from '../../../services/authService'
-import {queryClient} from '../../../config/query.config'
-import { toast } from "react-toastify"
-import { useMutation } from "@tanstack/react-query"
+import useLoginMutation from "../../../hooks/mutation/use.auth.mutate"
+
 
 const LoginForm = () => {
 
@@ -14,6 +12,11 @@ const LoginForm = () => {
   })
 
   const navigate = useNavigate();
+  const loginMutation = useLoginMutation({
+    onSuccess: () => {
+      navigate('/')
+    }
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,28 +26,9 @@ const LoginForm = () => {
     }))
   }
 
-  const loginMutation = useMutation({
-    mutationFn: authService.userLogin,
-    onSuccess: (response) => {
-      if (response.data.success) {
-        toast.success(response.data.message)
-        queryClient.invalidateQueries({ queryKey: ['user'] });
-        setLoginData({
-          email: "",
-          password: ""
-        })
-        navigate("/")
-      }
-    },
-    onError: (error) => {
-      toast.error(error.response?.data?.message || "Failed Login Error")
-    }
-  })
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //loginMutation.mutate(loginData)
-    await authService.userLogin(loginData)
+    loginMutation.mutate(loginData)
   }
 
 

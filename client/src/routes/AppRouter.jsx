@@ -22,12 +22,12 @@ const router = createBrowserRouter([
       {
         path: APP_ROUTES.HOME,
         element: <Home />,
-        loader: requireAuth,
+        //loader: requireAuth,
       },
       {
         path: APP_ROUTES.LOGIN,
         element: <Login />,
-        loader: requireGuest,
+        //loader: requireGuest,
       },
       {
         path: APP_ROUTES.REGISTER,
