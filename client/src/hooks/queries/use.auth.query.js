@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import userService from '../../services/userService'
 
 // Hook to get current user (only runs on mount/Refresh)
-export const useAuth = () => {
+export const useFetchUser = () => {
   return useQuery({
     queryKey: ['user'],
     queryFn: async ()=> {

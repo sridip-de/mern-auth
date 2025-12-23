@@ -1,8 +1,10 @@
 import { useAuthContext } from "../contexts/AuthContext"
 
+//import { useFetchUser } from "../hooks/queries/use.auth.query";
+
 const Home = () => {
 
-  const { user } = useAuthContext();
+  const {  user } = useAuthContext();
 
   return (
     <div className="

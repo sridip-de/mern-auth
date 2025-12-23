@@ -11,7 +11,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    if(error.response?.status === 401 && !originalRequest._retry) {
+    if(error.response?.status === 401 && !originalRequest._retry && !originalRequest.url.includes('/auth/refresh')) {
       originalRequest._retry = true;
 
       try {
@@ -19,8 +19,8 @@ axiosInstance.interceptors.response.use(
         await axiosInstance.post('/auth/refresh');
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, redirect to login
-        window.location.href = '/login';
+        // Refresh failed, just reject the error
+        // Let the component/route handle redirect based on auth state
         return Promise.reject(refreshError)
       }
     }

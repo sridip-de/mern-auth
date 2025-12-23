@@ -1,5 +1,5 @@
-import { createBrowserRouter, redirect } from "react-router";
-import  { RouterProvider } from "react-router/dom";
+import { createBrowserRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
 
 import MainLayout from "../components/layout/MainLayout"
 import Home from "../pages/Home";
@@ -11,7 +11,6 @@ import EmailVerify from "../pages/EmailVerify";
 import APP_ROUTES from "../constants/app.routes"
 
 import { requireGuest, requireAuth } from "./loaders";
-//import ProtectedRoute from '../components/protectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -32,11 +31,13 @@ const router = createBrowserRouter([
       },
       {
         path: APP_ROUTES.REGISTER,
-        element: <Singup />
+        element: <Singup />,
+        loader: requireGuest,
       },
       {
         path: APP_ROUTES.EMAIL_VERIFY,
-        element: <EmailVerify />
+        element: <EmailVerify />,
+        loader: requireAuth,
       }
     ]
   }

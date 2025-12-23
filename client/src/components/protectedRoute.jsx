@@ -3,14 +3,15 @@ import { useEffect } from 'react';
 import { useAuth } from '../hooks/queries/use.auth.query';
 
 const ProtectedRoute = ({children}) => {
-  const { data: userState, isLoading, isError } = useAuth();
+  const { data: userData, isLoading, error } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && (isError || !userState)) {
-      navigate('/login');
+    // If not loading and either errored or no user data, redirect to login
+    if (!isLoading && (!userData?.success || error)) {
+      navigate('/login', { replace: true });
     }
-  }, [isLoading, isError, userState, navigate]);
+  }, [isLoading, userData?.success, error, navigate]);
 
   if(isLoading) {
     return (
@@ -20,7 +21,8 @@ const ProtectedRoute = ({children}) => {
     );
   }
 
-  if (isError || !userState) {
+  // If no user data, don't render (will redirect)
+  if (!userData?.success) {
     return null;
   }
 

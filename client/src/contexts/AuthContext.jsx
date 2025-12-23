@@ -20,7 +20,7 @@ const AuthContextProvider = ({children}) => {
     onError: (error) => {
       // Only log errors, don't toast on 401 (expected when not logged in)
       if (error.response?.status !== 401) {
-        toast.error(error.response?.data?.message || 'Failed to fetch user');
+        console.error('Auth error:', error);
       }
     }
   });
