@@ -2,13 +2,11 @@ import { NavLink, useNavigate } from "react-router"
 import { useState } from "react"
 
 import authService from '../../../services/authService'
-import { useAuthContext } from "../../../contexts/AuthContext"
+import {queryClient} from '../../../config/query.config'
 import { toast } from "react-toastify"
 import { useMutation } from "@tanstack/react-query"
 
 const LoginForm = () => {
-
-  const { queryClient } = useAuthContext();
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -43,10 +41,10 @@ const LoginForm = () => {
     }
   })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('entered')
-    loginMutation.mutate(loginData)
+    //loginMutation.mutate(loginData)
+    await authService.userLogin(loginData)
   }
 
 
