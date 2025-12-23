@@ -11,7 +11,10 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    if(error.response?.status === 401 && !originalRequest._retry && !originalRequest.url.includes('/auth/refresh')) {
+    if(error.response?.status === 401 && 
+      !originalRequest._retry &&
+      !originalRequest.url.includes('/auth/') // exclude /auth/ endpoint prevent infinite loop
+    ) {
       originalRequest._retry = true;
 
       try {
@@ -30,3 +33,13 @@ axiosInstance.interceptors.response.use(
 )
 
 export default axiosInstance;
+
+// 1. The refresh request fails with 401
+// 2. The interceptor catches it
+// 3. ***Since this is a NEW request (not the original), it doesn't have `_retry` set
+// 4. It tries to refresh again by calling `/auth/refresh`
+// 5. That fails with 401 again
+// 6. ** Infinite loop!**
+// Solution
+// Exclude the auth endpoints form the retry logic
+// now if /auth/refresh fails with 401, the interceptor sees it's and auth endpoint and just rejects it without trying to refresh again

@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router"
 import { useState } from "react"
 
+import APP_ROUTES from "../../../constants/app.routes"
 import useLoginMutation from "../../../hooks/mutation/use.auth.mutate"
 
 
@@ -14,7 +15,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const loginMutation = useLoginMutation({
     onSuccess: () => {
-      navigate('/')
+      navigate(APP_ROUTES.HOME)
     }
   });
 

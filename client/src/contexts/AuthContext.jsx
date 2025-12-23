@@ -1,10 +1,5 @@
 import {createContext, useContext, useEffect, useState,useCallback} from 'react';
 
-import {toast} from 'react-toastify'
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import userService from '../services/userService'
-import { useFetchUser } from '../hooks/queries/use.auth.query';
-
 export const AuthContext = createContext(null);
 
 const AuthContextProvider = ({children}) => {
