@@ -3,7 +3,6 @@ import { useAuthContext } from "../contexts/AuthContext"
 const Home = () => {
 
   const { user } = useAuthContext();
-  console.log(user)
 
   return (
     <div className="

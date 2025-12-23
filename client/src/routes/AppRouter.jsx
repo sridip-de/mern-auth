@@ -11,6 +11,7 @@ import EmailVerify from "../pages/EmailVerify";
 import APP_ROUTES from "../constants/app.routes"
 
 import { requireGuest, requireAuth } from "./loaders";
+//import ProtectedRoute from '../components/protectedRoute';
 
 const router = createBrowserRouter([
   {

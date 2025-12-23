@@ -14,6 +14,8 @@ import ERROR_MESSAGE from '../constants/errorMessage.constants.js';
 import generateOtp from '../utils/generateOtp.js';
 // Import email service
 import EMAIL_SERVICE from '../services/emailService.js';
+// Import JWT
+import jwt from 'jsonwebtoken';
 
 // get user details form the forntend
 // validate user credentials (email & password )
@@ -98,6 +100,35 @@ const login = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(201,{ user: userData }, 'Login successful'));
   
 
+});
+
+// Refresh Access Token using Refresh Token
+const refreshAccessToken = asyncHandler(async (req, res, next) => {
+  const refreshToken = req.cookies?.refreshToken;
+
+  if (!refreshToken) {
+    return next(new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_MISSING));
+  }
+
+  let decoded;
+  try {
+    decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  } catch (error) {
+    return next(new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID));
+  }
+
+  const user = await User.findById(decoded._id);
+  if (!user || user.refreshToken !== refreshToken) {
+    return next(new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID));
+  }
+
+  const tokens = await user.generateAccessAndRefreshToken();
+
+  return res
+    .cookie('refreshToken', tokens.refreshToken, COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
+    .cookie('accessToken', tokens.accessToken, COOKIE_OPTIONS.ACCESS_TOKEN_OPTIONS)
+    .status(200)
+    .json(new ApiResponse(200, {}, 'Token refreshed successfully'));
 });
 
 // Find the user
@@ -186,6 +217,7 @@ export {
   register,
   login,
   logout,
+  refreshAccessToken,
   sendVerifyOtp,
   verifyOtp,
 };

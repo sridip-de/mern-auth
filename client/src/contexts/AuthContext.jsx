@@ -14,8 +14,14 @@ const AuthContextProvider = ({children}) => {
     queryKey: ['user'],
     queryFn: userService.getUser,
     retry: false,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: 'stale',
     onError: (error) => {
-      toast(error.response?.data?.message || 'Failed to fetch user');
+      // Only log errors, don't toast on 401 (expected when not logged in)
+      if (error.response?.status !== 401) {
+        toast.error(error.response?.data?.message || 'Failed to fetch user');
+      }
     }
   });
 
