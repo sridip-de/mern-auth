@@ -1,16 +1,17 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, redirect } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
-import MainLayout from "../components/layout/MainLayout"
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import Singup from "../pages/Register"
-import NotFound from "../pages/NotFound"
-import EmailVerify from "../pages/EmailVerify";
+import MainLayout from "@/layouts/MainLayout";
+import Home from "@/pages/Home";
+import Login from "@/pages/Login";
+import Singup from "@/pages/Register";
+import NotFound from "@/pages/NotFound";
+import EmailVerify from "@/pages/EmailVerify";
 
-import APP_ROUTES from "../constants/app.routes"
+import APP_ROUTES from "@/constants/app.routes";
 
 import { requireGuest, requireAuth } from "./loaders";
+import authService from "@/features/auth/services/authService";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +38,12 @@ const router = createBrowserRouter([
       {
         path: APP_ROUTES.EMAIL_VERIFY,
         element: <EmailVerify />,
-        loader: requireAuth,
+      },{
+        path: APP_ROUTES.LOGOUT,
+        loader: ()=>{
+          authService.userLogout();
+          throw redirect('/')
+        }
       }
     ]
   }

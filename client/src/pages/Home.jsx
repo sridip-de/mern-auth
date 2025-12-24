@@ -1,4 +1,4 @@
-import { useFetchUser } from "../hooks/queries/use.auth.query";
+import { useFetchUser } from "@/features/user";
 
 const Home = () => {
 

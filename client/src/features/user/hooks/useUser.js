@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import userService from '../../services/userService'
+import { userService } from "../services/userService";
 
 // Hook to get current user (only runs on mount/Refresh)
 export const useFetchUser = () => {

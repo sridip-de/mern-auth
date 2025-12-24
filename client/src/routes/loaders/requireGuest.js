@@ -1,6 +1,6 @@
 import { redirect } from "react-router";
-import userService from "../../services/userService";
-import APP_ROUTES from "../../constants/app.routes";
+import { userService } from "@/features/user/services/userService";
+import APP_ROUTES from "@/constants/app.routes";
 
 async function requireGuest() {
   try {

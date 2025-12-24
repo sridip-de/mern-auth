@@ -1,5 +1,5 @@
 import { redirect } from "react-router";
-import userService from "../../services/userService";
+import { userService } from "@/features/user/services/userService";
 
 async function requireAuth() {
   try {

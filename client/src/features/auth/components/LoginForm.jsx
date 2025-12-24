@@ -1,11 +1,11 @@
 import { NavLink, useNavigate } from "react-router"
 import { useState } from "react"
 
-import APP_ROUTES from "../../../constants/app.routes"
-import useLoginMutation from "../../../hooks/mutation/use.auth.mutate"
+import APP_ROUTES from "@/constants/app.routes"
+import { useLoginMutation } from "../hooks/useLogin"
 
 
-const LoginForm = () => {
+export const LoginForm = () => {
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -114,5 +114,3 @@ const LoginForm = () => {
     </div>
   )
 }
-
-export default LoginForm

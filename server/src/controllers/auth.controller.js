@@ -135,7 +135,7 @@ const refreshAccessToken = asyncHandler(async (req, res, next) => {
 
 const logout = asyncHandler(async (req,res,next) => {
   
-  //await User.findByIdAndUpdate(req.user._id, { refreshToken: "" });
+  await User.findByIdAndUpdate(req.user._id, { refreshToken: "" });
 
   return res 
   .clearCookie('refreshToken', COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)

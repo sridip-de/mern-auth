@@ -1,5 +1,5 @@
 import { NavLink } from "react-router"
-import ROUTE_PATHS from "../../../constants/app.routes"
+import APP_ROUTES from "@/constants/app.routes"
 
 const Header = () => {
   return (
@@ -27,7 +27,7 @@ const Header = () => {
           flex
           items-center
         ">
-          <NavLink to={ROUTE_PATHS.HOME} className="
+          <NavLink to={APP_ROUTES.HOME} className="
             text-zinc-300
             hover:text-blue-400
 
@@ -36,7 +36,8 @@ const Header = () => {
           </NavLink>
         </div>
 
-        <NavLink to={ROUTE_PATHS.LOGIN}>
+        <div className="flex space-x-4">
+          <NavLink to={APP_ROUTES.LOGIN}>
           <button className="
           px-4 py-2
           bg-blue-500
@@ -46,7 +47,20 @@ const Header = () => {
         ">
             Login
           </button>
+         
         </NavLink>
+        <NavLink to={APP_ROUTES.LOGOUT}>
+           <button className="
+          px-4 py-2
+          bg-red-500
+          text-white
+          rounded-md
+          hover:bg-red-600
+        ">
+            Logout
+          </button>
+        </NavLink>
+        </div>
       </div>
     </nav>
   )

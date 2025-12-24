@@ -1,9 +1,9 @@
 import { useNavigate, Outlet } from 'react-router';
 import { useEffect } from 'react';
-import { useAuth } from '../hooks/queries/use.auth.query';
+import { useFetchUser } from '../hooks/queries/use.auth.query';
 
 const ProtectedRoute = ({children}) => {
-  const { data: userData, isLoading, error } = useAuth();
+  const { data: userData, isLoading, error } = useFetchUser();
   const navigate = useNavigate();
 
   useEffect(() => {
