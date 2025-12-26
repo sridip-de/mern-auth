@@ -4,8 +4,8 @@ import { redirect } from "react-router";
 
 
 export const  guestLoader = async () => {
-    const success = await checkAuth();
-    if (success) return redirect(APP_ROUTES.HOME)
+    const isAuthenticated = await checkAuth();
+    if (isAuthenticated) return redirect(APP_ROUTES.HOME)
     return null;
 }
 
