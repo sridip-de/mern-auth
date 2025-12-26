@@ -1,3 +1,4 @@
+import { fetchAuth } from "@/features/auth";
 import { useFetchUser } from "@/features/user";
 
 const Home = () => {

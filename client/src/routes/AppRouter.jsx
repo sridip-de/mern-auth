@@ -11,7 +11,6 @@ import EmailVerify from "@/pages/EmailVerify";
 import APP_ROUTES from "@/constants/app.routes";
 
 import { guestLoader } from "./loaders";
-import authService from "@/features/auth/services/authService";
 
 const router = createBrowserRouter([
   {
@@ -37,13 +36,7 @@ const router = createBrowserRouter([
       {
         path: APP_ROUTES.EMAIL_VERIFY,
         element: <EmailVerify />,
-      },{
-        path: APP_ROUTES.LOGOUT,
-        loader: ()=>{
-          authService.userLogout();
-          throw redirect('/')
-        }
-      }
+      },
     ]
   }
 ])

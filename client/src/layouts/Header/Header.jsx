@@ -1,7 +1,17 @@
-import { NavLink } from "react-router"
+import { useNavigate, NavLink } from "react-router"
 import APP_ROUTES from "@/constants/app.routes"
+import { useLogoutMutation } from "@/features/auth"
+import { toast } from "react-toastify";
+
 
 const Header = () => {
+  const navigate = useNavigate();
+  const logout = useLogoutMutation({
+    onSuccess: (res) => {
+      navigate('/login')
+      toast.success(res.data.message)
+    }
+  });
   return (
     <nav className="
       
@@ -49,8 +59,10 @@ const Header = () => {
           </button>
          
         </NavLink>
-        <NavLink to={APP_ROUTES.LOGOUT}>
-           <button className="
+        
+           <button 
+           onClick={()=> logout.mutate()}
+           className="
           px-4 py-2
           bg-red-500
           text-white
@@ -59,7 +71,7 @@ const Header = () => {
         ">
             Logout
           </button>
-        </NavLink>
+        
         </div>
       </div>
     </nav>

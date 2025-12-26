@@ -1,18 +1,12 @@
+import APP_ROUTES from "@/constants/app.routes";
 import { fetchAuth } from "@/features/auth";
 import { redirect } from "react-router";
-import { toast } from "react-toastify";
 
 
 export const  guestLoader = async () => {
-  try {
-    const user = await fetchAuth();
-
-    if(user?.data?.success){
-     return redirect('/')
-    } 
-  } catch (error) {
-    toast.error(error || "error in guest loader")
-  }
+    const success = await fetchAuth();
+    if (success) return redirect(APP_ROUTES.HOME)
+    return null;
 }
 
 // async function requireAuth() {

@@ -16,11 +16,12 @@ export const LoginForm = () => {
   const navigate = useNavigate();
 
   const loginMutation = useLoginMutation({
-    onSuccess: () => {
+    onSuccess: (res) => {
       navigate(APP_ROUTES.HOME)
-      toast.success(res.data.success)
+      console.log(res.data.success)
+      toast.success(res.data.message) // toasts are part of UI code so don't put in hooks
     },
-    onError: () => {
+    onError: (error) => {
       toast.error(
         error.response?.data?.message || "Failed Login Error in Mutation"
       );
