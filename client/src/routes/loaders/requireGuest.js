@@ -1,10 +1,10 @@
 import APP_ROUTES from "@/constants/app.routes";
-import { fetchAuth } from "@/features/auth";
+import { checkAuth } from "@/features/auth";
 import { redirect } from "react-router";
 
 
 export const  guestLoader = async () => {
-    const success = await fetchAuth();
+    const success = await checkAuth();
     if (success) return redirect(APP_ROUTES.HOME)
     return null;
 }
