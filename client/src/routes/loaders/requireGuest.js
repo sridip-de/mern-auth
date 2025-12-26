@@ -1,22 +1,34 @@
+import { fetchAuth } from "@/features/auth";
 import { redirect } from "react-router";
-import { userService } from "@/features/user/services/userService";
-import APP_ROUTES from "@/constants/app.routes";
+import { toast } from "react-toastify";
 
-async function requireGuest() {
+
+export const  guestLoader = async () => {
   try {
-    const response = await userService.getUser();
-    // If user is logged in, redirect to home
-    if (response?.data?.success) {
-      throw redirect(APP_ROUTES.HOME);
-    }
-    return null;
+    const user = await fetchAuth();
+
+    if(user?.data?.success){
+     return redirect('/')
+    } 
   } catch (error) {
-    if (error instanceof Response) {
-      throw error; // Let React Router handle the redirect
-    }
-    // If error fetching user (e.g., not logged in), allow access to guest routes
-    return null;
+    toast.error(error || "error in guest loader")
   }
 }
 
-export default requireGuest;
+// async function requireAuth() {
+//   try {
+//     const response = await userService.getUser();
+//     if (!response?.data?.success) {
+//       throw redirect('/login');
+//     }
+//     return response.data;
+//   } catch (error) {
+//     if (error instanceof Response) {
+//       throw error;
+//     }
+//     // Any error (401, network, etc.) redirects to login
+//     throw redirect('/login');
+//   }
+// }
+
+// export default requireAuth;

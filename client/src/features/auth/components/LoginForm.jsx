@@ -3,6 +3,7 @@ import { useState } from "react"
 
 import APP_ROUTES from "@/constants/app.routes"
 import { useLoginMutation } from "../hooks/useLogin"
+import { toast } from "react-toastify"
 
 
 export const LoginForm = () => {
@@ -13,9 +14,16 @@ export const LoginForm = () => {
   })
 
   const navigate = useNavigate();
+
   const loginMutation = useLoginMutation({
     onSuccess: () => {
       navigate(APP_ROUTES.HOME)
+      toast.success(res.data.success)
+    },
+    onError: () => {
+      toast.error(
+        error.response?.data?.message || "Failed Login Error in Mutation"
+      );
     }
   });
 

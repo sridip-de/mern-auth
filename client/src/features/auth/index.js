@@ -10,3 +10,6 @@ export * from './hooks/useRegister';
 
 // 2. Export the service if you need it globally
 export * from './services/authService';
+
+// 4. Export the queries if you need it globally
+export * from './queries/auth.query'

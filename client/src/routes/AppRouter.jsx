@@ -10,7 +10,7 @@ import EmailVerify from "@/pages/EmailVerify";
 
 import APP_ROUTES from "@/constants/app.routes";
 
-import { requireGuest, requireAuth } from "./loaders";
+import { guestLoader } from "./loaders";
 import authService from "@/features/auth/services/authService";
 
 const router = createBrowserRouter([
@@ -28,12 +28,11 @@ const router = createBrowserRouter([
       {
         path: APP_ROUTES.LOGIN,
         element: <Login />,
-        //loader: requireGuest,
+        loader: guestLoader,
       },
       {
         path: APP_ROUTES.REGISTER,
         element: <Singup />,
-        loader: requireGuest,
       },
       {
         path: APP_ROUTES.EMAIL_VERIFY,

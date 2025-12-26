@@ -11,16 +11,12 @@ export const useLoginMutation = (options = {}) => {
       const [res] = args;
 
       if(res.data?.success) {
-        toast.success(res.data.message) 
 
         // Component responsibilities
         options.onSuccess?.(...args);
       }
     },
     onError: (error) => {
-      toast.error(
-        error.response?.data?.message || "Failed Login Error in Mutation"
-      );
 
       //Component responsibilites
       options.onError?.(error);
