@@ -3,6 +3,7 @@ const API_ENDPOINTS = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
     LOGOUT: '/auth/logout',
+    VERIFY_AUTH:'/auth/verify-auth'
   },
   USER_ENDPOINT: {
     GET_USER: '/user/data',

@@ -144,6 +144,17 @@ const logout = asyncHandler(async (req,res,next) => {
   .json(new ApiResponse(200, null, 'Logged out successfully'));
 });
 
+const verifyAuth = asyncHandler(async(req,res,next)=> {
+  const userId = req.user._id;
+  
+  if(!userId) throw new ApiError(401, ERROR_MESSAGE.AUTH.UNAUTHORIZED);
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200,null,"User is authenticated"))
+
+})
+
 // Send Verification OTP to the User's Email
 const sendVerifyOtp = asyncHandler(async (req, res, next) => {
 
@@ -220,4 +231,5 @@ export {
   refreshAccessToken,
   sendVerifyOtp,
   verifyOtp,
+  verifyAuth,
 };

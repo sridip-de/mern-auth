@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
 import {toast} from 'react-toastify';
 
-import authService from "../services/authService";
+import { authService } from "../services/authService";
 
 export const useLoginMutation = (options = {}) => {
   return useMutation({

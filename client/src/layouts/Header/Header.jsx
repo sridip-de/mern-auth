@@ -36,6 +36,7 @@ const Header = () => {
         <div className="
           flex
           items-center
+          space-x-4
         ">
           <NavLink to={APP_ROUTES.HOME} className="
             text-zinc-300
@@ -43,6 +44,13 @@ const Header = () => {
 
           ">
             Home
+          </NavLink>
+          <NavLink to={APP_ROUTES.REGISTER} className="
+            text-zinc-300
+            hover:text-blue-400
+
+          ">
+            Register
           </NavLink>
         </div>
 

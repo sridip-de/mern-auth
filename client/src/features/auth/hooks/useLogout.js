@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
-import authService from "../services/authService"
+import { authService } from "../services/authService";
 import { queryClient } from "@/config/query.config";
 
 export const useLogoutMutation = (options = {}) => {
@@ -8,6 +8,7 @@ export const useLogoutMutation = (options = {}) => {
     onSuccess: (...args) => {
       const [res] = args;
       if (res.data.success) {
+        queryClient.removeQueries({queryKey:['auth']});
         // Component responsibilities
         options.onSuccess?.(...args)
       }
