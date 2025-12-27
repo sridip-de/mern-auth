@@ -3,7 +3,7 @@ import { useState } from "react"
 
 import APP_ROUTES from "@/constants/app.routes"
 import { useLoginMutation } from "../hooks/useLogin"
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
 
 
 export const LoginForm = () => {
@@ -18,8 +18,8 @@ export const LoginForm = () => {
   const loginMutation = useLoginMutation({
     onSuccess: (res) => {
       navigate(APP_ROUTES.HOME)
-      console.log(res.data.success)
       toast.success(res.data.message) // toasts are part of UI code so don't put in hooks
+      
     },
     onError: (error) => {
       toast.error(

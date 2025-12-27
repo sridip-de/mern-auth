@@ -1,24 +1,26 @@
-import {createContext, useContext, useEffect, useState,useCallback} from 'react';
+import { createContext, useContext, useCallback } from 'react';
+import { useIsAuthenticated } from '@/features/auth/hooks/useAuth';
 
 export const AuthContext = createContext(null);
 
 const AuthContextProvider = ({children}) => {
+  // Use React Query for auth state
+  const { isAuthenticated, isLoading, error } = useIsAuthenticated();
 
   const value = {
-    // isLoggedIn,
-    // user,
-    // isLoading,
-    //queryClient
-  }
+    isAuthenticated,
+    isLoading,
+    error,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-// Abstruction code 
+// Abstraction code 
 // It reduces the need of importation of two useContext and Authcontext in each file
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
-  if(!context) throw Error('useauth must be used within AuthContextProvider');
+  if(!context) throw Error('useAuth must be used within AuthContextProvider');
   return context;
 }
 

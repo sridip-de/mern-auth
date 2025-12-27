@@ -8,14 +8,16 @@ export const useLogoutMutation = (options = {}) => {
     onSuccess: (...args) => {
       const [res] = args;
       if (res.data.success) {
-        queryClient.removeQueries({queryKey:['auth']});
+        // Clear all auth-related queries from cache
+        queryClient.removeQueries({ queryKey: ['auth'] });
+        queryClient.removeQueries({ queryKey: ['user'] });
+        
         // Component responsibilities
         options.onSuccess?.(...args)
       }
-      q
     },
     onError: (error) => {
-      // component responsibilities
+      // Component responsibilities
       options.onError?.(error)
     }
   })

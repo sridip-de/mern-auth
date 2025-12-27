@@ -1,5 +1,5 @@
 import AppRouter from "./routes/AppRouter";
-import AuthProvider from "./contexts/AuthContext";
+import AuthContextProvider from "./contexts/AuthContext";
 import {queryClient} from './config/query.config';
 import { QueryClientProvider } from "@tanstack/react-query";
 
@@ -7,9 +7,9 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
+      <AuthContextProvider>
       <AppRouter />
-      </AuthProvider>
+      </AuthContextProvider>
     </QueryClientProvider>
     
   )

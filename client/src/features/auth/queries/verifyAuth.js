@@ -1,7 +1,7 @@
 import { queryClient } from "@/config/query.config";
 import { authService } from "../services/authService";
 
-export async function checkAuth () {
+export async function verifyAuth () {
     try {
       // check cache first, reduces task for queryClient's cache checking
       // const cacheData = queryClient.getQueryData(['auth']);
