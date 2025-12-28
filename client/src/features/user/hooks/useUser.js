@@ -1,18 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "../services/userService";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuthStore } from "@/store/auth.store";
 
 // Hook to get current user (depends on auth status)
 export const useFetchUser = () => {
-  const { data: isAuthenticated, isLoading: authLoading } = useAuth(); // this call is not happening here, it is beging called by useFetchUser inside a React Component
-  
+  //console.trace('🟡 useFetchUser() called from:');
+
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  //console.log(isAuthenticated)
+
   return useQuery({
     queryKey: ['user'],
     queryFn: userService.getUser,
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: false,
-    enabled: !!isAuthenticated, // Only fetch if authenticated
     refetchOnWindowFocus: false,
     refetchOnMount: 'stale',
+    enabled: isAuthenticated,
+
   });
 };

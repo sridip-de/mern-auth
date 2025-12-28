@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authService } from "../services/authService";
+import { useAuthStore } from "@/store/auth.store";
 
 export const useLoginMutation = (options = {}) => {
   const queryClient = useQueryClient();
+  const setAuthenticated = useAuthStore((state)=> state.setAuthenticated)
 
   return useMutation({
     mutationFn: authService.userLogin,
@@ -12,12 +14,9 @@ export const useLoginMutation = (options = {}) => {
       await queryClient.cancelQueries({ queryKey: ['user'] });
       await queryClient.cancelQueries({ queryKey: ['auth'] });
 
-      //Enable auth queries for after login
-      queryClient.setQueryDefaults(['auth'], { enabled: true })
     },
 
-    onSuccess: (...args) => {
-      const [res] = args;
+    onSuccess:async (res, isLoading) => {
 
       if (res.data?.success) {
 
@@ -26,16 +25,16 @@ export const useLoginMutation = (options = {}) => {
         //   queryClient.setQueryData(['user'], res)
         // }
 
-        // // Update auth state optismisticly
-        // queryClient.setQueryData(['auth'],{data:true})
+        // Update authStore state optismisticly
+        //setAuthenticated(true)
 
         // Prefetch user Data if not included in login response
-        queryClient.invalidateQueries({ queryKey: ['auth'] })
-        queryClient.invalidateQueries({ queryKey: ['user'] });
+        await queryClient.invalidateQueries({ queryKey: ['auth'] })
+        // queryClient.invalidateQueries({ queryKey: ['user'] });
 
 
         // Component responsibilities
-        options.onSuccess?.(...args);
+        options.onSuccess?.(res, isLoading);
       }
     },
 

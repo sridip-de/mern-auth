@@ -1,17 +1,12 @@
 import { createContext, useContext, useCallback } from 'react';
-import { useIsAuthenticated } from '@/features/auth/hooks/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 export const AuthContext = createContext(null);
 
 const AuthContextProvider = ({children}) => {
-  // Use React Query for auth state
-  const { isAuthenticated, isLoading, error } = useIsAuthenticated();
-
-  const value = {
-    isAuthenticated,
-    isLoading,
-    error,
-  };
+  //console.trace('🟢 useAuthContext() called from:');
+  
+  const value = {}
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

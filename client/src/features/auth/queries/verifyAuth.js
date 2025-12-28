@@ -3,6 +3,7 @@ import { authService } from "../services/authService";
 
 export async function verifyAuth () {
     try {
+      console.log('verifyAuth is getting called')
       //check cache first, reduces task for queryClient's cache checking
       const cacheData = queryClient.getQueryData(['auth']);
 

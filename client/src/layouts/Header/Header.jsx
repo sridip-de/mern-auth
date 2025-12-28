@@ -3,10 +3,13 @@ import { useNavigate, NavLink } from "react-router"
 import { toast } from "react-toastify";
 
 import APP_ROUTES from "@/constants/app.routes"
-import { useIsAuthenticated, useLogoutMutation } from "@/features/auth"
+import { useLogoutMutation } from "@/features/auth"
+import { useAuthContext } from "@/contexts/AuthContext";
 
 const Header = () => {
-  const {isAuthenticated} = useIsAuthenticated();
+  
+  const {isAuthenticated, isLoading, error} = useAuthContext();  
+
   const navigate = useNavigate();
 
   const logout = useLogoutMutation({

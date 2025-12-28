@@ -1,31 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authService } from "../services/authService";
 
-
 export const useLogoutMutation = (options = {}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: authService.userLogout,
 
-    onMutate: async () => {
-      //Run before the mutation starts
-      await queryClient.cancelQueries();
-
-      queryClient.setQueryData(['auth'],{data:false})
-    },
-
     onSuccess: (...args) => {
       const [res] = args;
 
       if (res?.data?.success) {
+        // update the authState False
+        queryClient.setQueryData(['auth'],false)
 
-        // Clear all auth-related queries from cache
-        queryClient.removeQueries({ queryKey: ['auth'] });
         queryClient.removeQueries({ queryKey: ['user'] });
-
-        // Reset query enabled state
-        queryClient.setQueryDefaults(['auth'],{enabled:false})
+        //queryClient.removeQueries({queryKey:['auth']})
         
         // Component responsibilities
         options.onSuccess?.(...args)

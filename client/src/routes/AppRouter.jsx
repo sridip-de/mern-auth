@@ -10,7 +10,7 @@ import EmailVerify from "@/pages/EmailVerify";
 
 import APP_ROUTES from "@/constants/app.routes";
 
-import { guestLoader } from "./loaders";
+//import { guestLoader } from "./loaders";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
       {
         path: APP_ROUTES.LOGIN,
         element: <Login />,
-        loader: guestLoader,
+        //loader: guestLoader,
       },
       {
         path: APP_ROUTES.REGISTER,

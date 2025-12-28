@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { queryClient } from './query.config';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000/api',
@@ -16,6 +17,11 @@ axiosInstance.interceptors.response.use(
       !originalRequest.url.includes('/auth/') // exclude /auth/ endpoint prevent infinite loop
     ) {
       originalRequest._retry = true;
+
+      // Immediately disale all dependent 'enabled' queries
+      
+      
+      // Clear user data 
 
       try {
         // Try to refresh the token using the refresh endpoint
