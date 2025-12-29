@@ -38,7 +38,7 @@ export const useAuth = () => {
       console.error('Auth verification failed:',query.error);
       setAuthenticated(false);
     }
-  },[query.isSuccess, query.data, setAuthenticated]);
+  },[query.isSuccess, query.data,query.isError, setAuthenticated]);
 
   return query;
 
