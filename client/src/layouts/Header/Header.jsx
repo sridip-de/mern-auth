@@ -4,18 +4,15 @@ import { toast } from "react-toastify";
 
 import APP_ROUTES from "@/constants/app.routes"
 import { useLogoutMutation } from "@/features/auth"
-import { useAuthContext } from "@/contexts/AuthContext";
 
 const Header = () => {
-  
-  const {isAuthenticated, isLoading, error} = useAuthContext();  
 
   const navigate = useNavigate();
 
   const logout = useLogoutMutation({
     onSuccess: (res) => {
       navigate('/login')
-      toast.success(res.data.message);    
+      toast.warn(res.data.message);    
     }
   });
   return (

@@ -1,40 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { authService } from "../services/authService";
 import { useAuthStore } from "@/store/auth.store";
 
 export const useLoginMutation = (options = {}) => {
-  const queryClient = useQueryClient();
   const setAuthenticated = useAuthStore((state)=> state.setAuthenticated)
 
   return useMutation({
     mutationFn: authService.userLogin,
 
-    onMutate: async () => {
-      //Clear all ongoing queries
-      await queryClient.cancelQueries({ queryKey: ['user'] });
-      await queryClient.cancelQueries({ queryKey: ['auth'] });
-
-    },
-
-    onSuccess:async (res, isLoading) => {
+    onSuccess: (res) => {
 
       if (res.data?.success) {
-
-        // // Store user data immediately (optimistic)
-        // if (res.data?.data) {
-        //   queryClient.setQueryData(['user'], res)
-        // }
-
-        // Update authStore state optismisticly
-        //setAuthenticated(true)
-
-        // Prefetch user Data if not included in login response
-        await queryClient.invalidateQueries({ queryKey: ['auth'] })
-        // queryClient.invalidateQueries({ queryKey: ['user'] });
-
-
+        // Update the authStore zustand state
+        setAuthenticated(true)
         // Component responsibilities
-        options.onSuccess?.(res, isLoading);
+        options.onSuccess?.(res);
       }
     },
 
