@@ -47,6 +47,12 @@ const Header = () => {
           ">
             Home
           </NavLink>
+          <NavLink to={APP_ROUTES.EMAIL_VERIFY} className="
+            text-zinc-300
+            hover:text-blue-400
+          ">
+            Verify Email
+          </NavLink>
           
             <NavLink to={APP_ROUTES.REGISTER} className="
               text-zinc-300
