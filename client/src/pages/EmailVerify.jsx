@@ -9,7 +9,7 @@ const EmailVerify = () => {
   const inputRef = useRef([]);
   const navigate = useNavigate();
 
-  const emailVerifyMutation = useEmailVerify({
+  const {mutate: verifyEmail, isPending: isEmailVerifyPending} = useEmailVerify({
     onSuccess: (res) => {
       navigate(APP_ROUTES.HOME)
       toast.success(res.data.message);
@@ -21,7 +21,7 @@ const EmailVerify = () => {
     }
   });
 
-  const {mutate: sendOtp, isPending} = useSendOtp({
+  const {mutate: sendOtp, isPending: isSendingOtpPending} = useSendOtp({
     onSuccess: (data) => {
       toast.success('Otp sent Successfully')
     },
@@ -78,11 +78,11 @@ const EmailVerify = () => {
       return element.value
     });
     const value = valueArray.join('');
-    emailVerifyMutation.mutate({otp:value}) // Server expects a otp key in body object
-    console.log({otp:value}) 
+    verifyEmail({otp:value}) // Server expects a otp key in body object
+  
   };
 
-  const handleSendOtp = (event) => {
+  const handleSendOtp = () => {
     sendOtp();
   }
 
@@ -94,7 +94,7 @@ const EmailVerify = () => {
       justify-center
       h-[calc(100vh-60px)]
     ">
-      <button className="p-2 bg-zinc-200 mb-4" onClick={(event)=> handleSendOtp(event)}>Send Otp</button>
+      <button className={`p-2 ${isSendingOtpPending? 'bg-zinc-500': 'bg-zinc-200'} mb-4`} onClick={(event)=> handleSendOtp(event)} disabled={isSendingOtpPending}>Send Otp</button>
       <div className="border border-zinc-700 max-w-sm rounded-lg text-zinc-200 p-4 space-y-4">
         <h1 className="text">Enter OTP</h1>
         <form className="grid grid-cols-6 space-x-2">
@@ -112,7 +112,7 @@ const EmailVerify = () => {
           })}
         </form>
         <button 
-        className="w-full px-4 py-2 bg-blue-600 text-white rounded-md  active:bg-blue-700"
+        className={`w-full px-4 py-2 ${isEmailVerifyPending? 'bg-blue-700': 'bg-blue-600' } text-white rounded-md  active:bg-blue-700`}
         onClick={(event) => handleInputSubmit(event)}
         >
           Verify

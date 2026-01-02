@@ -171,7 +171,7 @@ const sendVerifyOtp = asyncHandler(async (req, res, next) => {
 
   await user.save();
 
-  //await EMAIL_SERVICE.sendVerificationEmail(user.email, user.verifyOtp, user.name);
+  await EMAIL_SERVICE.sendVerificationEmail(user.email, user.verifyOtp, user.name);
 
   return res
     .status(200)
@@ -210,7 +210,7 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
 
   await user.save();
 
-  //await EMAIL_SERVICE.sendEmailVerifiedConfirmation(user.email, user.name)
+  await EMAIL_SERVICE.sendEmailVerifiedConfirmation(user.email, user.name)
 
   return res
     .status(200)
