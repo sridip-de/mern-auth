@@ -20,7 +20,7 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
         id:user._id,
         name:user.name,
         email:user.email,
-        isAccauntVerified:user.isAccauntVerified
+        isAccountVerified:user.isAccountVerified,
       })
     );
 })

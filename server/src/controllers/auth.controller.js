@@ -171,7 +171,7 @@ const sendVerifyOtp = asyncHandler(async (req, res, next) => {
 
   await user.save();
 
-  await EMAIL_SERVICE.sendVerificationEmail(user.email, user.verifyOtp, user.name);
+  //await EMAIL_SERVICE.sendVerificationEmail(user.email, user.verifyOtp, user.name);
 
   return res
     .status(200)
@@ -185,6 +185,8 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
 
   const { otp } = req.body;
 
+  console.log(req.body)
+
   // check if otp is valid
   if (!otp || !/^\d{6}$/.test(otp)) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP); 
   
@@ -193,6 +195,9 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
   if (!user) throw new ApiError(404, ERROR_MESSAGE.USER.NOT_FOUND);
   // check if user already verified
   if(user.isAccountVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
+
+  console.log('Client OTP:',otp)
+  console.log('DataBase OTP:', user.verifyOtp)
   
   // Match the OTP
   if (user.verifyOtp !== otp) throw new ApiError(400, ERROR_MESSAGE.OTP.WRONG_OTP);
@@ -205,7 +210,7 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
 
   await user.save();
 
-  await EMAIL_SERVICE.sendEmailVerifiedConfirmation(user.email, user.name)
+  //await EMAIL_SERVICE.sendEmailVerifiedConfirmation(user.email, user.name)
 
   return res
     .status(200)

@@ -1,7 +1,34 @@
 import { useRef } from "react"
+import { useEmailVerify } from "@/features/auth";
+import { useSendOtp } from "@/features/auth/hooks/useSendOtp";
+import { useNavigate } from "react-router";
+import APP_ROUTES from "@/constants/app.routes";
+import { toast } from "react-toastify";
 
 const EmailVerify = () => {
   const inputRef = useRef([]);
+  const navigate = useNavigate();
+
+  const emailVerifyMutation = useEmailVerify({
+    onSuccess: (res) => {
+      navigate(APP_ROUTES.HOME)
+      toast.success(res.data.message);
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message || "Failed to Verify Email"
+      )
+    }
+  });
+
+  const {mutate: sendOtp, isPending} = useSendOtp({
+    onSuccess: (data) => {
+      toast.success('Otp sent Successfully')
+    },
+    onError: (error) => {
+      toast.error('Failed to send otp')
+    }
+  })
 
   const handleInputFocusForward = (event, index) => {
     // 1. Check if the input field must contain a value & we are at the second last input position by checking inputRef Array so that the do not cross the last input box
@@ -45,6 +72,20 @@ const EmailVerify = () => {
 
   }
 
+  const handleInputSubmit = (event) => {
+    event.preventDefault();
+    const valueArray = inputRef.current.map((element)=> {
+      return element.value
+    });
+    const value = valueArray.join('');
+    emailVerifyMutation.mutate({otp:value}) // Server expects a otp key in body object
+    console.log({otp:value}) 
+  };
+
+  const handleSendOtp = (event) => {
+    sendOtp();
+  }
+
   return (
     <div className="
        bg-zinc-800
@@ -53,6 +94,7 @@ const EmailVerify = () => {
       justify-center
       h-[calc(100vh-60px)]
     ">
+      <button className="p-2 bg-zinc-200 mb-4" onClick={(event)=> handleSendOtp(event)}>Send Otp</button>
       <div className="border border-zinc-700 max-w-sm rounded-lg text-zinc-200 p-4 space-y-4">
         <h1 className="text">Enter OTP</h1>
         <form className="grid grid-cols-6 space-x-2">
@@ -69,7 +111,12 @@ const EmailVerify = () => {
             />
           })}
         </form>
-        <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-md  active:bg-blue-700">Verify</button>
+        <button 
+        className="w-full px-4 py-2 bg-blue-600 text-white rounded-md  active:bg-blue-700"
+        onClick={(event) => handleInputSubmit(event)}
+        >
+          Verify
+        </button>
       </div>
     </div>
   )

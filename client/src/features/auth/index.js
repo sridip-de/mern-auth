@@ -7,6 +7,7 @@ export * from './hooks/useAuth';
 export * from './hooks/useLogin';
 export * from './hooks/useLogout';
 export * from './hooks/useRegister';
+export * from './hooks/useEmailVerify';
 
 // 3. Export the service if you need it globally
 export * from './services/authService'

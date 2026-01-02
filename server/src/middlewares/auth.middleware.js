@@ -6,7 +6,6 @@ import ERROR_MESSAGE from "../constants/errorMessage.constants.js";
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
 
-  console.log(process.env.ACCESS_TOKEN_SECRET)
   const token = req.cookies?.accessToken;
   
   if (!token) throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_MISSING);
@@ -31,7 +30,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
     throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID);
   }
 
-  console.log("Decoded Token:", decoded);
+  //console.log("Decoded Token:", decoded);
   //if(!decoded || !decoded.id) throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID);
 
   const user = await User.findById(decoded._id).select("-password -refreshToken");
