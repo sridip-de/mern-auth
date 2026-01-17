@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup';
 
 export const RegisterForm = () => {
 
@@ -29,29 +31,62 @@ export const RegisterForm = () => {
   //   })
   // }
 
+  const schema = yup.object({
+    name: yup.string()
+    .required('Name is required')
+    .min(2,'Name must be atleast 2 characters')
+    .max(50,'Name can not exceed 50 characters'),
+    userName:yup.string()
+    .required('Username is required')
+    .min(4, 'Username must be at least 4 charecters')
+    .max(20, 'Username cannot exceed 20 characters'),
+    email: yup.string().email().required('Email is required'),
+    password: yup.string()
+    .required('Password is required')
+    .min(4,'password must be atleast 4 character long')
+    .max(20,'password cannot exceed 20 character')
+  })
+
   const form = useForm({
-    mode:'all'
+    mode: 'all',
+    resolver: yupResolver(schema)
   });
 
   const {
     register,
     handleSubmit,
+    reset,
     formState,
   } = form;
 
-  const {errors} = formState;
+  const { errors, isSubmitSuccessful } = formState;
+
+  const onSubmit = (data) => {
+    console.log(data)
+  }
+
+  const onError = (error) => {
+    console.log(error);
+  }
+
+  useEffect(()=> {
+    if(isSubmitSuccessful){
+      reset();
+    }
+  },[isSubmitSuccessful, reset])
+
 
   return (
     <div className='space-y-4 min-w-sm border border-zinc-500 p-6 rounded-md bg-zinc-800'>
       <h4 className='font-bold text-lg text-zinc-50 flex justify-center'>
         Register
       </h4>
-      <form noValidate className='space-y-4'>
+      <form noValidate className='space-y-4' onSubmit={handleSubmit(onSubmit,onError)} >
 
         <div className="space-y-2">
           <label className="block text-sm font-medium text-zinc-300">Name</label>
-          <input 
-            type='text' 
+          <input
+            type='text'
             placeholder='Full Name'
             className="
               w-full px-3 py-2.5
@@ -65,18 +100,15 @@ export const RegisterForm = () => {
               focus:border-transparent
               transition-all
             "
-            {...register('name',{
-              required:'Full name is required'
-            })}
+            {...register('name')}
           />
           <p className='text-red-500'>{errors.name?.message}</p>
         </div>
 
         <div className="space-y-2">
           <label className="block text-sm font-medium text-zinc-300">Username</label>
-          <input 
-            name="userName"
-            type='text' 
+          <input
+            type='text'
             placeholder='Username'
             className="
               w-full px-3 py-2.5
@@ -90,18 +122,15 @@ export const RegisterForm = () => {
               focus:border-transparent
               transition-all
             "
-            {...register('userName',{
-              required:'User name is required'
-            })}
+            {...register('userName')}
           />
           <p className='text-red-500'>{errors.userName?.message}</p>
         </div>
 
         <div className="space-y-2">
           <label className="block text-sm font-medium text-zinc-300">Email</label>
-          <input 
-            name="email"
-            type='email' 
+          <input
+            type='email'
             placeholder='Enter email'
             className="
               w-full px-3 py-2.5
@@ -115,18 +144,15 @@ export const RegisterForm = () => {
               focus:border-transparent
               transition-all
             "
-            {...register('email',{
-              required:'email is required'
-            })}
+            {...register('email')}
           />
           <p className='text-red-500'>{errors.email?.message}</p>
         </div>
 
         <div className="space-y-2">
           <label className="block text-sm font-medium text-zinc-300">Password</label>
-          <input 
-            name='password'
-            type='password' 
+          <input
+            type='password'
             placeholder='Enter password'
             className="
               w-full px-3 py-2.5
@@ -139,14 +165,12 @@ export const RegisterForm = () => {
               focus:border-transparent
               transition-all
             "
-            {...register('password',{
-              required:'password is required'
-            })}
+            {...register('password')}
           />
           <p className='text-red-500'>{errors.password?.message}</p>
         </div>
 
-        <button 
+        <button
           type='submit'
           className="
             w-full px-4 py-2.5
@@ -159,7 +183,7 @@ export const RegisterForm = () => {
             focus:border-transparent
             transition-all
           "
-          onClick={handleSubmit}
+          //onClick={handleSubmit}
         >
           Register
         </button>
