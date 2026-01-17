@@ -1,44 +1,56 @@
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 export const RegisterForm = () => {
 
-  const [registerData, setRegisterData] = useState({
-    name:"",
-    userName:"",
-    email:"",
-    password:""
-  })
+  // const [registerData, setRegisterData] = useState({
+  //   name:"",
+  //   userName:"",
+  //   email:"",
+  //   password:""
+  // })
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setRegisterData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setRegisterData(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }))
+  // }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(registerData);
-    setRegisterData({
-      name:"",
-      userName:"",
-      email:"",
-      password:""
-    })
-  }
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log(registerData);
+  //   setRegisterData({
+  //     name:"",
+  //     userName:"",
+  //     email:"",
+  //     password:""
+  //   })
+  // }
+
+  const form = useForm({
+    mode:'all'
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState,
+  } = form;
+
+  const {errors} = formState;
 
   return (
     <div className='space-y-4 min-w-sm border border-zinc-500 p-6 rounded-md bg-zinc-800'>
       <h4 className='font-bold text-lg text-zinc-50 flex justify-center'>
         Register
       </h4>
-      <form className='space-y-4'>
+      <form noValidate className='space-y-4'>
 
         <div className="space-y-2">
           <label className="block text-sm font-medium text-zinc-300">Name</label>
           <input 
-            name="name"
             type='text' 
             placeholder='Full Name'
             className="
@@ -53,9 +65,11 @@ export const RegisterForm = () => {
               focus:border-transparent
               transition-all
             "
-            onChange={handleChange}
-            value={registerData.name}
+            {...register('name',{
+              required:'Full name is required'
+            })}
           />
+          <p className='text-red-500'>{errors.name?.message}</p>
         </div>
 
         <div className="space-y-2">
@@ -76,9 +90,11 @@ export const RegisterForm = () => {
               focus:border-transparent
               transition-all
             "
-            onChange={handleChange}
-            value={registerData.userName}
+            {...register('userName',{
+              required:'User name is required'
+            })}
           />
+          <p className='text-red-500'>{errors.userName?.message}</p>
         </div>
 
         <div className="space-y-2">
@@ -99,9 +115,11 @@ export const RegisterForm = () => {
               focus:border-transparent
               transition-all
             "
-            onChange={handleChange}
-            value={registerData.email}
+            {...register('email',{
+              required:'email is required'
+            })}
           />
+          <p className='text-red-500'>{errors.email?.message}</p>
         </div>
 
         <div className="space-y-2">
@@ -121,9 +139,11 @@ export const RegisterForm = () => {
               focus:border-transparent
               transition-all
             "
-            onChange={handleChange}
-            value={registerData.password}
+            {...register('password',{
+              required:'password is required'
+            })}
           />
+          <p className='text-red-500'>{errors.password?.message}</p>
         </div>
 
         <button 
