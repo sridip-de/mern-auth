@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify';
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup';
+
+import { useRegisterMutation } from '../hooks/useRegister';
 
 export const RegisterForm = () => {
 
@@ -35,7 +38,8 @@ export const RegisterForm = () => {
     name: yup.string()
     .required('Name is required')
     .min(2,'Name must be atleast 2 characters')
-    .max(50,'Name can not exceed 50 characters'),
+    .max(50,'Name can not exceed 50 characters')
+    ,
     userName:yup.string()
     .required('Username is required')
     .min(4, 'Username must be at least 4 charecters')
@@ -52,6 +56,18 @@ export const RegisterForm = () => {
     resolver: yupResolver(schema)
   });
 
+  const registerMutation = useRegisterMutation({
+    onSuccess: (res) => {
+      toast.success(res.data.message)
+    },
+
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message || "Failed to register"
+      )
+    }
+  });
+
   const {
     register,
     handleSubmit,
@@ -61,8 +77,9 @@ export const RegisterForm = () => {
 
   const { errors, isSubmitSuccessful } = formState;
 
-  const onSubmit = (data) => {
-    console.log(data)
+  const onSubmit = (registerData) => {
+    console.log(registerData)
+    registerMutation.mutate(registerData)
   }
 
   const onError = (error) => {
