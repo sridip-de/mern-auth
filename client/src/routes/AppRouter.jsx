@@ -1,16 +1,17 @@
 import { createBrowserRouter, redirect } from "react-router";
 import { RouterProvider } from "react-router/dom";
+import { lazy, Suspense} from 'react';
 
 import MainLayout from "@/layouts/MainLayout";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
-import Singup from "@/pages/Register";
+const Signup = lazy(()=> import('@/pages/Register'))
 import NotFound from "@/pages/NotFound";
-import EmailVerify from "@/pages/EmailVerify";
+const EmailVerify = lazy(()=> import('@/pages/EmailVerify'))
 
 import APP_ROUTES from "@/constants/app.routes";
 
-//import { guestLoader } from "./loaders";
+//import { requireAuth } from "./loaders/requireAuth";
 
 const router = createBrowserRouter([
   {
@@ -27,15 +28,19 @@ const router = createBrowserRouter([
       {
         path: APP_ROUTES.LOGIN,
         element: <Login />,
-        //loader: guestLoader,
+        //loader: requireAuth,
       },
       {
         path: APP_ROUTES.REGISTER,
-        element: <Singup />,
+        element: <Suspense fallback={<div>Loading</div>}>
+          <Signup/>
+        </Suspense>,
       },
       {
         path: APP_ROUTES.EMAIL_VERIFY,
-        element: <EmailVerify />,
+        element: <Suspense fallback={<div>Loading</div>}>
+          <EmailVerify/>
+        </Suspense>,
       },
     ]
   }
