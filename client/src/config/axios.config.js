@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { queryClient } from './query.config';
+import tokenRefreshManager from '@/utils/tokenRefresh';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000/api',
@@ -7,36 +7,50 @@ const axiosInstance = axios.create({
   withCredentials: true,
 })
 
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config
+// axiosInstance.interceptors.response.use(
+//   (response) => response,
 
-    if(error.response?.status === 401 && 
-      !originalRequest._retry &&
-      !originalRequest.url.includes('/auth/') // exclude /auth/ endpoint prevent infinite loop
-    ) {
-      originalRequest._retry = true;
+//   async (error) => {
+//     const originalRequest = error.config;
 
-      // Immediately disale all dependent 'enabled' queries
+//     if(error.response?.status === 401 && !originalRequest._retry) {
+//       return tokenRefreshManager.handleTokenRefresh(axiosInstance, originalRequest);
+//     }
+
+//     return Promise.reject(error);
+//   }
+// )
+
+// axiosInstance.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     const originalRequest = error.config
+
+//     if(error.response?.status === 401 && 
+//       !originalRequest._retry &&
+//       !originalRequest.url.includes('/auth/') // exclude /auth/ endpoint prevent infinite loop
+//     ) {
+//       originalRequest._retry = true;
+
+//       // Immediately disale all dependent 'enabled' queries
       
       
-      // Clear user data 
+//       // Clear user data 
 
-      try {
-        // Try to refresh the token using the refresh endpoint
-        await axiosInstance.post('/auth/refresh');
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        // Refresh failed, just reject the error
-        // Let the component/route handle redirect based on auth state
-        return Promise.reject(refreshError)
-      }
-    }
+//       try {
+//         // Try to refresh the token using the refresh endpoint
+//         await axiosInstance.post('/auth/refresh');
+//         return axiosInstance(originalRequest);
+//       } catch (refreshError) {
+//         // Refresh failed, just reject the error
+//         // Let the component/route handle redirect based on auth state
+//         return Promise.reject(refreshError)
+//       }
+//     }
 
-    return Promise.reject(error);
-  }
-)
+//     return Promise.reject(error);
+//   }
+// )
 
 export default axiosInstance;
 
