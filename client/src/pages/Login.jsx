@@ -1,3 +1,4 @@
+import GoogleLoginButton from '@/components/common/Buttons/GoogleLoginButton'
 import { LoginForm } from '@/features/auth'
 
 const Login = () => {
@@ -8,6 +9,7 @@ const Login = () => {
       h-[calc(100vh-60px)]
     '>
       <LoginForm />
+      <GoogleLoginButton/>
     </div>
   )
 }
