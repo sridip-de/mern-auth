@@ -17,7 +17,11 @@ const Home = () => {
       <div className="
         text-5xl text-zinc-100
         mb-8
+        flex
+        flex-col
+        items-center
       ">
+        <img src={user?.data?.data?.picture} className="rounded-full mb-4"/>
         👋️ Hey! {user?.data ? user.data.data.name : "Developer"}
       </div>
       <button className="
