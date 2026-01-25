@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   name:{type: String, required: true},
   email:{type: String, required: true, unique: true},
   password:{type: String, required: true},
+  picture:{type: String, default: null},
   verifyOtp:{type: String, default: null}, // 01234 Number will cause 1234 so use String instead
   verifyOtpExpireAt:{type: Number, default:0},
   isAccountVerified:{type: Boolean, default:false},
