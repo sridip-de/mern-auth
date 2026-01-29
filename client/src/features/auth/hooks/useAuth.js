@@ -4,7 +4,6 @@ import { queryClient } from "@/config/query.config";
 import { useAuthStore } from "@/store/auth.store";
 import { useEffect } from "react";
 
-
 /**
  * Core authentication verification hook
  * Should be called at the root level (App.js or AuthProvider)
@@ -14,7 +13,7 @@ const authOption = queryOptions({
   queryKey: ['auth'],
   queryFn: authService.userVerify,
   retry: false,
-  staleTime: 5* 60* 1000, // 5 min
+  staleTime: 5 * 60 * 1000, // 5 min
   gcTime: 10 * 60 * 1000,
   refetchOnWindowFocus: false,
   refetchOnMount: false,
@@ -30,15 +29,17 @@ export const useAuth = () => {
   const query = useQuery(authOption);
 
   useEffect(() => {
-    if(query.isSuccess) {
+    if (query.isSuccess) {
       setAuthenticated(query.data)
     }
 
-    if(query.isError) {
-      console.error('Auth verification failed:',query.error);
+    if (query.isError) {
+
+      console.log(query.error);
+      //console.error('Auth verification failed:',query.error);
       setAuthenticated(false);
     }
-  },[query.isSuccess, query.data,query.isError, setAuthenticated]);
+  }, [query.isSuccess, query.data, query.isError, setAuthenticated]);
 
   return query;
 

@@ -3,7 +3,7 @@ import { authService } from "../services/authService";
 import { useAuthStore } from "@/store/auth.store";
 
 export const useLoginMutation = (options = {}) => {
-  const setAuthenticated = useAuthStore((state)=> state.setAuthenticated)
+  const setAuthenticated = useAuthStore((state) => state.setAuthenticated)
 
   return useMutation({
     mutationFn: authService.userLogin,
@@ -13,6 +13,7 @@ export const useLoginMutation = (options = {}) => {
       if (res.data?.success) {
         // Update the authStore zustand state
         setAuthenticated(true)
+
         // Component responsibilities
         options.onSuccess?.(res);
       }

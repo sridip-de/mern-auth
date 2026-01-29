@@ -19,12 +19,10 @@ export const LoginForm = () => {
     onSuccess: (res) => {
       navigate(APP_ROUTES.HOME)
       toast.success(res.data.message) // toasts are part of UI code so don't put in hooks
-      
+
     },
     onError: (error) => {
-      toast.error(
-        error.response?.data?.message || "Failed Login Error in Mutation"
-      );
+      toast.error(error.message);
     }
   });
 

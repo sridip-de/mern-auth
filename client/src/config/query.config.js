@@ -9,6 +9,7 @@ export const queryClient = new QueryClient({
       //refetchOnWindowFocus: false,
     },
     mutations: {
+      retry: false,
       //retry: 1,
     },
   },
