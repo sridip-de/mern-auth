@@ -33,7 +33,7 @@ class CustomError {
       503: 'Service unavailable. Please try again later',
     };
 
-    return this.message || statusMessages[error.statusCode] || 'An unexpected error occured';
+    return this.message || statusMessages[this.statusCode] || 'An unexpected error occured';
   }
 
   getCustomError() {
