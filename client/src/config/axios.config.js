@@ -1,5 +1,7 @@
 import axios from 'axios';
 import tokenRefreshManager from '@/utils/tokenRefresh';
+//import { getErrorMessage } from '@/utils/errorHandler';
+import CustomError from '@/utils/errorHandler';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000/api',
@@ -7,50 +9,21 @@ const axiosInstance = axios.create({
   withCredentials: true,
 })
 
-// axiosInstance.interceptors.response.use(
-//   (response) => response,
+axiosInstance.interceptors.response.use(
+  (response) => response,
 
-//   async (error) => {
-//     const originalRequest = error.config;
+  async (error) => {
+    const originalRequest = error.config;
+    const customError = new CustomError(error);
+    const errorDetails = customError.getCustomError();
+    // if(error.response?.status === 401 && !originalRequest._retry) {
+    //   return tokenRefreshManager.handleTokenRefresh(axiosInstance, originalRequest);
+    // }
 
-//     if(error.response?.status === 401 && !originalRequest._retry) {
-//       return tokenRefreshManager.handleTokenRefresh(axiosInstance, originalRequest);
-//     }
+    return Promise.reject(errorDetails);
+  }
+)
 
-//     return Promise.reject(error);
-//   }
-// )
-
-// axiosInstance.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const originalRequest = error.config
-
-//     if(error.response?.status === 401 && 
-//       !originalRequest._retry &&
-//       !originalRequest.url.includes('/auth/') // exclude /auth/ endpoint prevent infinite loop
-//     ) {
-//       originalRequest._retry = true;
-
-//       // Immediately disale all dependent 'enabled' queries
-      
-      
-//       // Clear user data 
-
-//       try {
-//         // Try to refresh the token using the refresh endpoint
-//         await axiosInstance.post('/auth/refresh');
-//         return axiosInstance(originalRequest);
-//       } catch (refreshError) {
-//         // Refresh failed, just reject the error
-//         // Let the component/route handle redirect based on auth state
-//         return Promise.reject(refreshError)
-//       }
-//     }
-
-//     return Promise.reject(error);
-//   }
-// )
 
 export default axiosInstance;
 
