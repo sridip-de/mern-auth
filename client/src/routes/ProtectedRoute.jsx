@@ -1,14 +1,16 @@
 import { useAuth } from "@/features/auth";
 import { Navigate, Outlet } from "react-router";
 
+import Loader from "@/components/common/Loader/Loader";
+
 function ProtectedRoute() {
 
   const { data, isLoading, isError } = useAuth();
-  console.log('Protected Route', data);
+  console.log('Protected Route', 'data:', data);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader />
 
-  if (isError || !data) {
+  if (isError) {
     return <Navigate to={'/login'} />;
   }
 
