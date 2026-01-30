@@ -28,10 +28,10 @@ import jwt from 'jsonwebtoken';
 
 const register = asyncHandler(async (req, res, next) => {
 
-  const { name, email, password,userName } = req.body;
+  const { name, email, password, userName } = req.body;
 
   if (!name?.trim() || !email?.trim() || !password?.trim()) {
-    return next(new ApiError(400,'All fields are required' ));
+    return next(new ApiError(400, 'All fields are required'));
   }
 
   const userExists = await User.findOne({
@@ -39,7 +39,7 @@ const register = asyncHandler(async (req, res, next) => {
   })
 
   if (userExists) {
-    return next(new ApiError(400,'Uer already exists' ));
+    return next(new ApiError(409, 'Uer already exists'));
   }
 
   const user = await User.create({ name, email, password, userName: userName.toLowerCase() });
@@ -48,7 +48,7 @@ const register = asyncHandler(async (req, res, next) => {
   const createdUser = await User.findById(user._id).select('-password -refreshToken');
 
   if (!createdUser) {
-    return next(new ApiError(500,'User not created'));
+    return next(new ApiError(500, 'User not created'));
   }
 
   const tokens = await user.generateAccessAndRefreshToken();
@@ -57,10 +57,10 @@ const register = asyncHandler(async (req, res, next) => {
   await EMAIL_SERVICE.sendWelcomeEmail(createdUser.email, createdUser.name);
 
   return res
-    .cookie('refreshToken', tokens.refreshToken,COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
-    .cookie('accessToken', tokens.accessToken,COOKIE_OPTIONS.ACCESS_TOKEN_OPTIONS)
+    .cookie('refreshToken', tokens.refreshToken, COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
+    .cookie('accessToken', tokens.accessToken, COOKIE_OPTIONS.ACCESS_TOKEN_OPTIONS)
     .status(201)
-    .json(new ApiResponse(201,{ user: createdUser }, 'User registered successfully'));
+    .json(new ApiResponse(201, { user: createdUser }, 'User registered successfully'));
 
 });
 
@@ -76,7 +76,7 @@ const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email?.trim() || !password?.trim()) {
-    return next(new ApiError(400,'All fields are required'));
+    return next(new ApiError(400, 'All fields are required'));
   }
 
   const user = await User.findOne({ email });
@@ -97,8 +97,8 @@ const login = asyncHandler(async (req, res, next) => {
     .cookie('refreshToken', tokens.refreshToken, COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
     .cookie('accessToken', tokens.accessToken, COOKIE_OPTIONS.ACCESS_TOKEN_OPTIONS)
     .status(201)
-    .json(new ApiResponse(201,{ user: userData }, 'Login successful'));
-  
+    .json(new ApiResponse(201, { user: userData }, 'Login successful'));
+
 
 });
 
@@ -133,25 +133,25 @@ const refreshAccessToken = asyncHandler(async (req, res, next) => {
 
 // Find the user
 
-const logout = asyncHandler(async (req,res,next) => {
-  
+const logout = asyncHandler(async (req, res, next) => {
+
   await User.findByIdAndUpdate(req.user._id, { refreshToken: "" });
 
-  return res 
-  .clearCookie('refreshToken', COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
-  .clearCookie('accessToken', COOKIE_OPTIONS.ACCESS_TOKEN_OPTIONS)
-  .status(200)
-  .json(new ApiResponse(200, null, 'Logged out successfully'));
+  return res
+    .clearCookie('refreshToken', COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
+    .clearCookie('accessToken', COOKIE_OPTIONS.ACCESS_TOKEN_OPTIONS)
+    .status(200)
+    .json(new ApiResponse(200, null, 'Logged out successfully'));
 });
 
-const verifyAuth = asyncHandler(async(req,res,next)=> {
-  const userId = req.user._id;
-  
-  if(!userId) throw new ApiError(401, ERROR_MESSAGE.AUTH.UNAUTHORIZED);
+const verifyAuth = asyncHandler(async (req, res, next) => {
+  const user = req.user;
+
+  if (!user._id) throw new ApiError(401, ERROR_MESSAGE.AUTH.UNAUTHORIZED);
 
   return res
-  .status(200)
-  .json(new ApiResponse(200,null,"User is authenticated"))
+    .status(200)
+    .json(new ApiResponse(200, user, "User is authenticated"))
 
 })
 
@@ -188,17 +188,17 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
   console.log(req.body)
 
   // check if otp is valid
-  if (!otp || !/^\d{6}$/.test(otp)) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP); 
-  
+  if (!otp || !/^\d{6}$/.test(otp)) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP);
+
   const user = await User.findById(userId);
   // check is user exists
   if (!user) throw new ApiError(404, ERROR_MESSAGE.USER.NOT_FOUND);
   // check if user already verified
-  if(user.isAccountVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
+  if (user.isAccountVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
 
-  console.log('Client OTP:',otp)
+  console.log('Client OTP:', otp)
   console.log('DataBase OTP:', user.verifyOtp)
-  
+
   // Match the OTP
   if (user.verifyOtp !== otp) throw new ApiError(400, ERROR_MESSAGE.OTP.WRONG_OTP);
   // Check if OTP is expired
@@ -225,8 +225,8 @@ const sendPasswordResetOtp = asyncHandler(async (req, res, next) => {
 })
 
 // Reset Password route
-const resetOtp = asyncHandler(async (req, res, next)=> {
-  
+const resetOtp = asyncHandler(async (req, res, next) => {
+
 })
 
 export {
