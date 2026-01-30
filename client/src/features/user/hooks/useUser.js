@@ -1,13 +1,13 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { userService } from "../services/userService";
-import { useAuthStore } from "@/store/auth.store";
+import { useQueryState } from "@/store/queryState.store";
+import { queryClient } from "@/config/query.config";
+
 
 // Hook to get current user (depends on auth status)
 export const useFetchUser = () => {
   //console.trace('🟡 useFetchUser() called from:');
-
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  //console.log(isAuthenticated)
+  const { queryState } = useQueryState();
 
   return useQuery({
     queryKey: ['user'],
@@ -16,7 +16,11 @@ export const useFetchUser = () => {
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnMount: 'stale',
-    enabled: isAuthenticated,
+    enabled: queryState,
 
   });
 };
+
+export const useInvalidateUser = () => {
+  return queryClient.removeQueries({ queryKey: ['user'] });
+}
