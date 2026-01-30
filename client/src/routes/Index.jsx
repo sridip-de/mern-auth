@@ -1,13 +1,14 @@
 import { createBrowserRouter, redirect } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import { lazy, Suspense} from 'react';
+import { lazy, Suspense } from 'react';
 
 import MainLayout from "@/layouts/MainLayout";
+import ProtectedRoute from "./ProtectedRoute";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
-const Signup = lazy(()=> import('@/pages/Register'))
+const Signup = lazy(() => import('@/pages/Register'))
 import NotFound from "@/pages/NotFound";
-const EmailVerify = lazy(()=> import('@/pages/EmailVerify'))
+const EmailVerify = lazy(() => import('@/pages/EmailVerify'))
 
 import APP_ROUTES from "@/constants/app.routes";
 
@@ -18,30 +19,38 @@ const router = createBrowserRouter([
     path: "/",
     element: <MainLayout />,
     errorElement: <NotFound />,
-    
+
     children: [
       {
         path: APP_ROUTES.HOME,
         element: <Home />,
-        //loader: requireAuth,
+
       },
       {
         path: APP_ROUTES.LOGIN,
         element: <Login />,
-        //loader: requireAuth,
+
       },
       {
         path: APP_ROUTES.REGISTER,
         element: <Suspense fallback={<div>Loading</div>}>
-          <Signup/>
+          <Signup />
         </Suspense>,
       },
+
+      // Protected Routes
       {
-        path: APP_ROUTES.EMAIL_VERIFY,
-        element: <Suspense fallback={<div>Loading</div>}>
-          <EmailVerify/>
-        </Suspense>,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: APP_ROUTES.EMAIL_VERIFY,
+            element: <Suspense fallback={<div>Loading..</div>}>
+              <EmailVerify />
+            </Suspense>
+          }
+        ]
       },
+
     ]
   }
 ])
