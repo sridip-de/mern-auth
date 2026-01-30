@@ -22,7 +22,9 @@ export const LoginForm = () => {
 
     },
     onError: (error) => {
-      toast.error(error.message);
+      if (!error.isClientError) {
+        toast.error(error.message);
+      }
     }
   });
 

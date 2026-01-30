@@ -36,12 +36,17 @@ class CustomError {
     return this.message || statusMessages[this.statusCode];
   }
 
+  setClientError() {
+    return [401, 404, 403, 409, 422].includes(this.statusCode);
+  }
+
   getCustomError() {
     return {
       message: this.getMessage(),
       statusCode: this.statusCode,
       code: this.code,
       isNetworkError: this.isNetworkError,
+      isClientError: this.setClientError(),
     }
   }
 }
