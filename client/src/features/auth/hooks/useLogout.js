@@ -1,30 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authService } from "../services/authService";
+import { useQueryState } from "@/store/queryState.store";
+import { useInvalidateAuth } from "./useAuth";
+import { useInvalidateUser } from "@/features/user";
 
 export const useLogoutMutation = (options = {}) => {
-  const queryClient = useQueryClient();
+
+  const { setQueryState } = useQueryState();
 
   return useMutation({
     mutationFn: authService.userLogout,
-
-    onSuccess: (...args) => {
-      const [res] = args;
-
+    onSuccess: (res) => {
       if (res?.data?.success) {
-        // update the authState False
-        queryClient.setQueryData(['auth'],false)
-
-        queryClient.removeQueries({ queryKey: ['user'] });
-        //queryClient.removeQueries({queryKey:['auth']})
-        
-        // Component responsibilities
-        options.onSuccess?.(...args)
+        setQueryState(false);
+        useInvalidateAuth();
+        useInvalidateUser();
+        options.onSuccess?.(res)
       }
     },
-
     onError: (error, variables, context) => {
-
-      // Component responsibilities
       options.onError?.(error)
     }
   })

@@ -1,20 +1,17 @@
 import { useMutation } from "@tanstack/react-query"
 import { authService } from "../services/authService";
-import { useAuthStore } from "@/store/auth.store";
+import { useQueryState } from "@/store/queryState.store";
 
 export const useLoginMutation = (options = {}) => {
-  const setAuthenticated = useAuthStore((state) => state.setAuthenticated)
+
+  const { setQueryState } = useQueryState();
 
   return useMutation({
     mutationFn: authService.userLogin,
 
     onSuccess: (res) => {
-
       if (res.data?.success) {
-        // Update the authStore zustand state
-        setAuthenticated(true)
-
-        // Component responsibilities
+        setQueryState(true);
         options.onSuccess?.(res);
       }
     },
