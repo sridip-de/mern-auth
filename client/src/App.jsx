@@ -1,4 +1,4 @@
-import AppRouter from "./routes/AppRouter";
+import AppRouter from "./routes/Index";
 import AuthContextProvider from "./contexts/AuthContext";
 import { queryClient } from './config/query.config';
 import { QueryClientProvider } from "@tanstack/react-query";
