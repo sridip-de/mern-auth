@@ -1,5 +1,5 @@
 import axios from 'axios';
-import tokenRefreshManager from '@/utils/tokenRefresh';
+import TokenRefresher from '@/utils/tokenRefresher';
 
 import CustomError from '@/utils/errorHandler';
 
@@ -9,18 +9,22 @@ const axiosInstance = axios.create({
   withCredentials: true,
 })
 
-axiosInstance.interceptors.response.use(
+const interceptor = axiosInstance.interceptors.response.use(
   (response) => response,
 
   async (error) => {
-    const originalRequest = error.config;
-    const customError = new CustomError(error);
-    const errorDetails = customError.getCustomError();
+    // const originalRequest = error.config;
+    // const customError = new CustomError(error);
+    // const errorDetails = customError.getCustomError();
     // if(error.response?.status === 401 && !originalRequest._retry) {
     //   return tokenRefreshManager.handleTokenRefresh(axiosInstance, originalRequest);
     // }
+    const tokenRefresher = new TokenRefresher();
 
-    return Promise.reject(errorDetails);
+    return tokenRefresher.handleResponseError(error, axiosInstance, interceptor)
+      .catch((finalError) => {
+        return Promise.reject(new CustomError(finalError).getCustomError());
+      })
   }
 )
 
