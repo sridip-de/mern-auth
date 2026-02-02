@@ -10,6 +10,8 @@ import User from '../models/userModel.js';
 import COOKIE_OPTIONS from '../constants/cookieOptions.constants.js';
 // Import error messages
 import ERROR_MESSAGE from '../constants/errorMessage.constants.js';
+// Import entralized Error codes and messages
+import ErrorCodes from '../constants/errorCode.constants.js';
 // Import generateOtp utility (not used in this snippet)
 import generateOtp from '../utils/generateOtp.js';
 // Import email service
@@ -31,7 +33,7 @@ const register = asyncHandler(async (req, res, next) => {
   const { name, email, password, userName } = req.body;
 
   if (!name?.trim() || !email?.trim() || !password?.trim()) {
-    return next(new ApiError(400, 'All fields are required'));
+    return next(new ApiError(ErrorCodes.MISSING_FIELDS));
   }
 
   const userExists = await User.findOne({
@@ -39,7 +41,7 @@ const register = asyncHandler(async (req, res, next) => {
   })
 
   if (userExists) {
-    return next(new ApiError(409, 'Uer already exists'));
+    return next(new ApiError(ErrorCodes.USER_ALREADY_EXISTS));
   }
 
   const user = await User.create({ name, email, password, userName: userName.toLowerCase() });
@@ -48,7 +50,7 @@ const register = asyncHandler(async (req, res, next) => {
   const createdUser = await User.findById(user._id).select('-password -refreshToken');
 
   if (!createdUser) {
-    return next(new ApiError(500, 'User not created'));
+    return next(new ApiError(ErrorCodes.DATABASE_ERROR));
   }
 
   const tokens = await user.generateAccessAndRefreshToken();
@@ -76,16 +78,16 @@ const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email?.trim() || !password?.trim()) {
-    return next(new ApiError(400, 'All fields are required'));
+    return next(new ApiError(ErrorCodes.MISSING_FIELDS));
   }
 
   const user = await User.findOne({ email });
 
-  if (!user) return next(new ApiError(404, ERROR_MESSAGE.USER.NOT_FOUND));
+  if (!user) return next(new ApiError(ErrorCodes.USER_NOT_FOUND));
 
   const isPasswordValid = await user.comparePassword(password);
 
-  if (!isPasswordValid) return next(new ApiError(401, ERROR_MESSAGE.USER.INVALID_CREDENTIALS));
+  if (!isPasswordValid) return next(new ApiError(ErrorCodes.INVALID_CREDENTIALS));
 
   const tokens = await user.generateAccessAndRefreshToken();
 
