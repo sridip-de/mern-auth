@@ -4,7 +4,7 @@ import TokenRefresher from '@/utils/tokenRefresher';
 import CustomError from '@/utils/errorHandler';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://mern-auth-nn1z.onrender.com/api',
   timeout: 5000,
   withCredentials: true,
 });
