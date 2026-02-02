@@ -114,9 +114,9 @@ export const LoginForm = () => {
 
         <button
           type='submit'
-          className="
+          className={`
             w-full px-4 py-2.5
-            bg-blue-500
+            ${loginMutation.isPending ? 'bg-blue-800' : 'bg-blue-500'}
             border border-zinc-600
             text-zinc-50
             rounded-md
@@ -125,10 +125,11 @@ export const LoginForm = () => {
             focus:ring-2
             focus:border-transparent
             transition-all
-          "
+          `}
           onClick={handleSubmit(onSubmit)}
         >
-          Login
+          {loginMutation.isPending ? 'Loggin In...' : 'Login'}
+
         </button>
 
       </form>
