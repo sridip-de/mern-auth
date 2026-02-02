@@ -49,6 +49,11 @@ export const ErrorCodes = {
     httpStatus: 409,
     message: 'Email already in use'
   },
+  EMAIL_ALREADY_VERIFIED: {
+    code: 'EMAIL_ALREADY_VERIFIED',
+    httpStatus: 400,
+    message: 'Email already verified'
+  },
   // Validation errors (4xx)
   VALIDATION_ERROR: {
     code: 'VALIDATION_ERROR',
