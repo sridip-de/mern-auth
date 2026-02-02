@@ -3,31 +3,37 @@ import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import ApiError from "../utils/apiError.constructor.js";
 import ERROR_MESSAGE from "../constants/errorMessage.constants.js";
+import ErrorCodes from "../constants/errorCode.constants.js";
+
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
-
+  console.log(req.headers.cookie);
   const token = req.cookies?.accessToken;
-  
-  if (!token) throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_MISSING);
+  console.log(token);
+
+  if (!token) {
+    console.log('token is missing');
+    throw new ApiError(ErrorCodes.TOKEN_MISSING);
+  }
 
   let decoded;
 
 
   try {
 
-    decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);  
-    
+    decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
   } catch (error) {
-    
+
     if (error.name === "TokenExpiredError") {
-      throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_EXPIRED);
+      throw new ApiError(ErrorCodes.TOKEN_EXPIRED);
     }
 
     if (error.name === "JsonWebTokenError" || error.name === "NotBeforeError") {
-      throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID);
+      throw new ApiError(ErrorCodes.TOKEN_INVALID);
     }
 
-    throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID);
+    throw new ApiError(ErrorCodes.TOKEN_INVALID);
   }
 
   //console.log("Decoded Token:", decoded);
@@ -35,7 +41,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
   const user = await User.findById(decoded._id).select("-password -refreshToken");
 
-  if (!user) throw new ApiError(401, ERROR_MESSAGE.AUTH.USER_NOT_FOUND);
+  if (!user) throw new ApiError(ErrorCodes.USER_NOT_FOUND);
 
   req.user = user;
 
