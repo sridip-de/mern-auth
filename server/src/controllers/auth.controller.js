@@ -164,7 +164,7 @@ const sendVerifyOtp = asyncHandler(async (req, res, next) => {
 
   const user = await User.findById(userId);
   // check wheather user is already verified
-  if (user.isVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
+  if (user.isVerified) throw new ApiError(ErrorCodes.EMAIL_ALREADY_VERIFIED);
 
   const otp = generateOtp();
 
