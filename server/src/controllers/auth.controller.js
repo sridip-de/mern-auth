@@ -187,7 +187,7 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
 
   const { otp } = req.body;
 
-  console.log(req.body)
+  ////console.log(req.body)
 
   // check if otp is valid
   if (!otp || !/^\d{6}$/.test(otp)) throw new ApiError(400, ERROR_MESSAGE.OTP.INVALID_OTP);
@@ -198,8 +198,8 @@ const verifyOtp = asyncHandler(async (req, res, next) => {
   // check if user already verified
   if (user.isAccountVerified) throw new ApiError(400, ERROR_MESSAGE.USER.EMAIL_ALREADY_VERIFIED);
 
-  console.log('Client OTP:', otp)
-  console.log('DataBase OTP:', user.verifyOtp)
+  ////console.log('Client OTP:', otp)
+  ////console.log('DataBase OTP:', user.verifyOtp)
 
   // Match the OTP
   if (user.verifyOtp !== otp) throw new ApiError(400, ERROR_MESSAGE.OTP.WRONG_OTP);

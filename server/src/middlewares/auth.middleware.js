@@ -7,12 +7,12 @@ import ErrorCodes from "../constants/errorCode.constants.js";
 
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
-  console.log(req.headers.cookie);
+  //console.log(req.headers.cookie);
   const token = req.cookies?.accessToken;
-  console.log(token);
+  //console.log(token);
 
   if (!token) {
-    console.log('token is missing');
+    //console.log('token is missing');
     throw new ApiError(ErrorCodes.TOKEN_MISSING);
   }
 
@@ -36,7 +36,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
     throw new ApiError(ErrorCodes.TOKEN_INVALID);
   }
 
-  //console.log("Decoded Token:", decoded);
+  ////console.log("Decoded Token:", decoded);
   //if(!decoded || !decoded.id) throw new ApiError(401, ERROR_MESSAGE.AUTH.TOKEN_INVALID);
 
   const user = await User.findById(decoded._id).select("-password -refreshToken");

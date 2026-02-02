@@ -2,7 +2,7 @@ const whitelist = ['http://localhost:4173', 'http://localhost:5173', 'https://go
 
 const CORS_CONFIG = {
   origin: function (origin, callback) {
-    console.log(origin)
+    ////console.log(origin)
     if(!origin) {
       return callback (null, true);
     }

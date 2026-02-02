@@ -7,7 +7,7 @@ import ApiResponse from "../utils/apiResponse.constructor.js";
 const handleGoogleCallback = asyncHandler(async (req, res, next) => {
   const googleUser = req.user;
 
-  console.log(googleUser)
+  //console.log(googleUser)
   // 1. Find or create user in db
   let user = await User.findOne({email: googleUser.emails[0].value});
 
