@@ -9,6 +9,8 @@ import Login from "@/pages/Login";
 const Signup = lazy(() => import('@/pages/Register'))
 import NotFound from "@/pages/NotFound";
 const EmailVerify = lazy(() => import('@/pages/EmailVerify'))
+import Loader from "@/components/common/Loader/Loader";
+
 
 import APP_ROUTES from "@/constants/app.routes";
 
@@ -33,7 +35,7 @@ const router = createBrowserRouter([
       },
       {
         path: APP_ROUTES.REGISTER,
-        element: <Suspense fallback={<div>Loading</div>}>
+        element: <Suspense fallback={<Loader />}>
           <Signup />
         </Suspense>,
       },
@@ -44,7 +46,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: APP_ROUTES.EMAIL_VERIFY,
-            element: <Suspense fallback={<div>Loading..</div>}>
+            element: <Suspense fallback={<Loader />}>
               <EmailVerify />
             </Suspense>
           }
