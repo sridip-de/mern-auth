@@ -1,5 +1,7 @@
 import { NavLink, useNavigate } from "react-router"
 import { useState } from "react"
+import { useForm } from "react-hook-form"
+
 
 import APP_ROUTES from "@/constants/app.routes"
 import { useLoginMutation } from "../hooks/useLogin"
@@ -8,10 +10,17 @@ import { toast } from "react-toastify";
 
 export const LoginForm = () => {
 
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: ""
-  })
+  const form = useForm();
+
+  const {
+    register,
+    setError,
+    formState,
+    handleSubmit,
+  } = form;
+
+  const { errors } = formState;
+
 
   const navigate = useNavigate();
 
@@ -25,21 +34,29 @@ export const LoginForm = () => {
       if (!error.isClientError) {
         toast.error(error.message);
       }
+
+      setError('email', { type: 'custom', message: error.message })
+
     }
   });
+  //
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setLoginData(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }))
+  // }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setLoginData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+  const onSubmit = (data) => {
+    loginMutation.mutate(data)
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    loginMutation.mutate(loginData)
-  }
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   loginMutation.mutate(loginData)
+  // }
 
 
   return (
@@ -52,10 +69,10 @@ export const LoginForm = () => {
         <div className="space-y-2">
           <label className="block text-sm font-medium text-zinc-300">Email</label>
           <input
-            name="email"
+            {...register('email')}
             type='email'
             placeholder='Enter email'
-            value={loginData.email}
+            // value={loginData.email}
             className="
               w-full px-3 py-2.5
               bg-zinc-700
@@ -68,17 +85,17 @@ export const LoginForm = () => {
               focus:border-transparent
               transition-all
             "
-            onChange={handleChange}
+          // onChange={handleChange}
           />
+          <p className="text-red-500">{errors.email?.message}</p>
         </div>
 
         <div className="space-y-2">
           <label className="block text-sm font-medium text-zinc-300">Password</label>
           <input
-            name="password"
+            {...register('password')}
             type='password'
             placeholder='Enter password'
-            value={loginData.password}
             className="
               w-full px-3 py-2.5
               bg-zinc-700
@@ -91,7 +108,7 @@ export const LoginForm = () => {
               focus:border-transparent
               transition-all
             "
-            onChange={handleChange}
+          // onChange={handleChange}
           />
         </div>
 
@@ -109,7 +126,7 @@ export const LoginForm = () => {
             focus:border-transparent
             transition-all
           "
-          onClick={handleSubmit}
+          onClick={handleSubmit(onSubmit)}
         >
           Login
         </button>
