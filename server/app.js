@@ -6,9 +6,10 @@ import CORS_CONFIG from './src/configs/cors.config.js'
 
 const app = express();
 // Middleware setup
+app.use(cookieParser());
 app.use(cors(CORS_CONFIG));
 app.use(express.json());
-app.use(cookieParser());
+
 app.use(express.urlencoded({ extended: true }));
 
 // Imort Routes
