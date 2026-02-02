@@ -37,7 +37,7 @@ class CustomError {
   }
 
   setClientError() {
-    return [401, 404, 403, 409, 422].includes(this.statusCode);
+    return [400, 401, 404, 403, 409, 422].includes(this.statusCode);
   }
 
   getCustomError() {
