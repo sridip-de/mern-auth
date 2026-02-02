@@ -1,17 +1,26 @@
 class ApiError extends Error {
-  constructor( statusCode, message, errors = [], stack ='') {
+  constructor(
+    errorCodeObj,
+    customMessage,
+    errorCode = "INTERNAL_ERROR",
+    errors = [],
+    stack = ''
+  ) {
+    // Use custom message if provided
+    const message = customMessage || errorCodeObj.message;
+
     super(message);
-    this.statusCode = statusCode;
-    this.sucess = false;
+    this.statusCode = errorCodeObj.httpStatus;
+    this.success = false;
     this.message = message;
-    this.errors = errors;
-    stack? this.stack = stack 
-    : Error.captureStackTrace(this, this.constructor);
-    // if (stack) {
-    //   this.stack = stack;
-    // } else {
-    //   Error.captureStackTrace(this, this.constructor);
-    // }
+    this.errors = errors; // For Validation error Array;
+    this.errorCode = errorCodeObj.code;
+
+    if (stack) {
+      this.stack = stack;
+    } else {
+      Error.captureStackTrace(this, this.constructor);
+    }
   }
 }
 
