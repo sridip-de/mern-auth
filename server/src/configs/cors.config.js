@@ -1,4 +1,4 @@
-const whitelist = ['http://localhost:4173', 'http://localhost:5173', 'https://google.com']
+const whitelist = ['https://mern-auth-1-9w20.onrender.com/','http://localhost:4173', 'http://localhost:5173', 'https://google.com']
 
 const CORS_CONFIG = {
   origin: function (origin, callback) {
