@@ -7,9 +7,12 @@ const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000/api',
   timeout: 5000,
   withCredentials: true,
-})
+});
 
-const interceptor = axiosInstance.interceptors.response.use(
+// Place this constructor outside of the interceptor so that each response error don't create a new instance of this class;
+const tokenRefresher = new TokenRefresher();
+
+axiosInstance.interceptors.response.use(
   (response) => response,
 
   async (error) => {
@@ -19,9 +22,9 @@ const interceptor = axiosInstance.interceptors.response.use(
     // if(error.response?.status === 401 && !originalRequest._retry) {
     //   return tokenRefreshManager.handleTokenRefresh(axiosInstance, originalRequest);
     // }
-    const tokenRefresher = new TokenRefresher();
 
-    return tokenRefresher.handleResponseError(error, axiosInstance, interceptor)
+
+    return tokenRefresher.handleResponseError(error, axiosInstance)
       .catch((finalError) => {
         return Promise.reject(new CustomError(finalError).getCustomError());
       })
