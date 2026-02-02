@@ -18,43 +18,66 @@ class TokenRefresher {
   async handleResponseError(error, axiosInstance) {
     console.log('entered');
     const originalRequest = error.config;
+    const responseData = error.response?.data;
+    const errorCode = responseData?.errorCode;
+
+    console.log(errorCode);
+
+    // If no response data, Backend is not sending data
+    if (!responseData) return Promise.reject(error);
 
     // Prevent intercepting the refresh request itself
     if (originalRequest.url?.includes('/auth/refresh')) {
       return Promise.reject(error);
     };
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (this.isRefreshing) {
-        return new Promise((resolve, reject) => {
-          this.failedQueue.push({ resolve, reject });
-        }).then(() => {
-          return axiosInstance(originalRequest); // the global axios interceptor is gonna get this returned server value and serve the react components
-        }).catch(err => {
-          return Promise.reject(err);
-        });
+    if (error.response?.status === 401) {
+
+      const isTokenExpired = errorCode === "TOKEN_EXPIRED";
+      const isTokenInvalid = errorCode === "TOKEN_INVALID";
+      const isTokenMissing = errorCode === "TOKEN_MISSING";
+
+      console.log('entered in 401 block:');
+
+
+      if (isTokenMissing || isTokenInvalid) {
+        return Promise.reject(error);
+        // Window location to login page will be added later;
       }
 
-      originalRequest._retry = true;
-      this.isRefreshing = true;
+      if (isTokenExpired || !errorCode) {
 
-      // axiosInstance.interceptors.response.eject(interceptor);
-      //
-      return new Promise((resolve, reject) => {
-        axiosInstance.post('/auth/refresh') // only this should call the /auth/refresh endpoint no other service other wise the url includes auth endpoint would not work
-          .then(() => {
-            this.processQueue(null);
-            resolve(axiosInstance(originalRequest)); // relove the promise created in this new Promise chain and in resolve parameter return the data of the original request, ex: get user data;
-          })
-          .catch((err) => {
-            this.processQueue(err);
-            //window.location.href = '/login';
-            reject(err);
-          })
-          .finally(() => {
-            this.isRefreshing = false;
-          })
-      })
+        if (this.isRefreshing) {
+          return new Promise((resolve, reject) => {
+            this.failedQueue.push({ resolve, reject });
+          }).then(() => {
+            return axiosInstance(originalRequest); // the global axios interceptor is gonna get this returned server value and serve the react components
+          }).catch(err => {
+            return Promise.reject(err);
+          });
+        }
+
+        originalRequest._retry = true;
+        this.isRefreshing = true;
+
+        // axiosInstance.interceptors.response.eject(interceptor);
+        //
+        return new Promise((resolve, reject) => {
+          axiosInstance.post('/auth/refresh') // only this should call the /auth/refresh endpoint no other service other wise the url includes auth endpoint would not work
+            .then(() => {
+              this.processQueue(null);
+              resolve(axiosInstance(originalRequest)); // relove the promise created in this new Promise chain and in resolve parameter return the data of the original request, ex: get user data;
+            })
+            .catch((err) => {
+              this.processQueue(err);
+              //window.location.href = '/login';
+              reject(err);
+            })
+            .finally(() => {
+              this.isRefreshing = false;
+            })
+        })
+      }
     }
     console.log('not a 401 error so getting out')
     return Promise.reject(error); // If not a 401 error or a Network error
