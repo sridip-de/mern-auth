@@ -1,10 +1,14 @@
 import { useMutation } from "@tanstack/react-query"
 import { authService } from "../services/authService";
 import { useQueryState } from "@/store/queryState.store";
+import { useNavigate } from 'react-router';
+import { toast } from "react-toastify";
+
 
 export const useLoginMutation = (options = {}) => {
 
   const { setQueryState } = useQueryState();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: authService.userLogin,
@@ -12,12 +16,15 @@ export const useLoginMutation = (options = {}) => {
     onSuccess: (res) => {
       if (res.data?.success) {
         setQueryState(true);
+        navigate('/');
+        toast.success(res.data.message);
         options.onSuccess?.(res);
       }
     },
 
     onError: (error) => {
       console.error(error)
+      if (!error.isClientError) toast.error(error.message);
       //Component responsibilities
       options.onError?.(error);
     },

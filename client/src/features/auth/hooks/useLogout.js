@@ -3,10 +3,13 @@ import { authService } from "../services/authService";
 import { useQueryState } from "@/store/queryState.store";
 import { useInvalidateAuth } from "./useAuth";
 import { useInvalidateUser } from "@/features/user";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 export const useLogoutMutation = (options = {}) => {
 
   const { setQueryState } = useQueryState();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: authService.userLogout,
@@ -15,11 +18,13 @@ export const useLogoutMutation = (options = {}) => {
         setQueryState(false);
         useInvalidateAuth();
         useInvalidateUser();
-        options.onSuccess?.(res)
+        navigate('/login');
+        toast.warn(res.data.message);
+        options.onSuccess?.(res);
       }
     },
-    onError: (error, variables, context) => {
-      options.onError?.(error)
+    onError: (error) => {
+      options.onError?.(error);
     }
   })
 }
