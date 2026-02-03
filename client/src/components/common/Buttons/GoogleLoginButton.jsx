@@ -1,7 +1,10 @@
+import {CONSTANTS} from '@/constants'
+console.log(CONSTANTS);
+
 const GoogleLoginButton = () => {
 
   const handleGoogleLogin = () => {
-    window.location.href = import.meta.env.VITE_NODE_ENV === 'production' ? 'https://mern-auth-nn1z.onrender.com/api/auth/google' : 'http://localhost:3000/api/auth/google';
+    window.location.href = CONSTANTS.GOOGLE_AUTH_URI;
 
   }
 
