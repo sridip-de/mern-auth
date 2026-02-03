@@ -1,11 +1,7 @@
-import { NavLink, useNavigate } from "react-router"
-import { useState } from "react"
+import { NavLink } from "react-router"
 import { useForm } from "react-hook-form"
 
-
-import APP_ROUTES from "@/constants/app.routes"
 import { useLoginMutation } from "../hooks/useLogin"
-import { toast } from "react-toastify";
 
 
 export const LoginForm = () => {
@@ -21,42 +17,16 @@ export const LoginForm = () => {
 
   const { errors } = formState;
 
-
-  const navigate = useNavigate();
-
   const loginMutation = useLoginMutation({
-    onSuccess: (res) => {
-      navigate(APP_ROUTES.HOME)
-      toast.success(res.data.message) // toasts are part of UI code so don't put in hooks
-
-    },
     onError: (error) => {
-      if (!error.isClientError) {
-        toast.error(error.message);
-      }
-
       setError('email', { type: 'custom', message: error.message })
-
     }
   });
-  //
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setLoginData(prev => ({
-  //     ...prev,
-  //     [name]: value
-  //   }))
-  // }
+
 
   const onSubmit = (data) => {
     loginMutation.mutate(data)
   }
-
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   loginMutation.mutate(loginData)
-  // }
 
 
   return (
