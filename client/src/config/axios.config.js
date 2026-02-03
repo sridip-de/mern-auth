@@ -1,10 +1,11 @@
 import axios from 'axios';
+import {CONSTANTS } from '@/constants';
 import TokenRefresher from '@/utils/tokenRefresher';
 
 import CustomError from '@/utils/errorHandler';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://mern-auth-nn1z.onrender.com/api',
+  baseURL: CONSTANTS.BASE_URL,
   timeout: 5000,
   withCredentials: true,
 });
