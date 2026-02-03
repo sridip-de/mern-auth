@@ -1,20 +1,11 @@
-import { useNavigate, NavLink } from "react-router"
-import { toast } from "react-toastify";
-import { useState } from "react";
+import { NavLink } from "react-router"
 
 import APP_ROUTES from "@/constants/app.routes"
 import { useLogoutMutation } from "@/features/auth"
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
 
-  const logout = useLogoutMutation({
-    onSuccess: (res) => {
-      navigate('/login')
-      toast.warn(res.data.message);
-    }
-  });
+  const logout = useLogoutMutation();
 
   return (
     <nav className="bg-zinc-800 border-b border-zinc-700">
