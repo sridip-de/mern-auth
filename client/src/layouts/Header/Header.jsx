@@ -24,6 +24,9 @@ const Header = () => {
           <NavLink to={APP_ROUTES.REGISTER} className="text-zinc-300 hover:text-blue-400 transition-colors">
             Register
           </NavLink>
+          <NavLink to ={APP_ROUTES.UPLOAD_TEST} className="text-zinc-300 hover:text-blue-400 transition-colors">
+            Upload
+          </NavLink>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">

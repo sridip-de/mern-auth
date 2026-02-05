@@ -10,7 +10,7 @@ const Signup = lazy(() => import('@/pages/Register'))
 import NotFound from "@/pages/NotFound";
 const EmailVerify = lazy(() => import('@/pages/EmailVerify'))
 import Loader from "@/components/common/Loader/Loader";
-
+const UploadPage = lazy(() => import('@/pages/UploadPage'));
 
 import APP_ROUTES from "@/constants/app.routes";
 
@@ -39,6 +39,13 @@ const router = createBrowserRouter([
           <Signup />
         </Suspense>,
       },
+      {
+        path: APP_ROUTES.UPLOAD_TEST,
+        element: <Suspense fallback={<Loader/>}>
+        <UploadPage/>
+        </Suspense>
+      }
+      ,
 
       // Protected Routes
       {

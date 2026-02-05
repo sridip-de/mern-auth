@@ -4,6 +4,7 @@ const APP_ROUTES = {
   LOGOUT: '/logout',
   REGISTER: '/register',
   EMAIL_VERIFY: '/verify-email',
+  UPLOAD_TEST: '/upload',
 }
 
 export default APP_ROUTES;
