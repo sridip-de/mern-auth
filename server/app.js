@@ -3,9 +3,11 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import CORS_CONFIG from './src/configs/cors.config.js'
+import { limiter } from './src/middlewares/rateLimiter.middleware.js';
 
 const app = express();
 // Middleware setup
+app.use(limiter);
 app.use(cookieParser());
 app.use(cors(CORS_CONFIG));
 app.use(express.json());
