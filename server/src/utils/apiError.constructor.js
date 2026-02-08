@@ -2,7 +2,6 @@ class ApiError extends Error {
   constructor(
     errorCodeObj,
     customMessage,
-    errorCode = "INTERNAL_ERROR",
     errors = [],
     stack = ''
   ) {
@@ -25,3 +24,14 @@ class ApiError extends Error {
 }
 
 export default ApiError;
+
+// **Note**
+// this.message → Global / human summmary
+// - One Sentence
+// - safe to show as toDateString();
+//  - Always present
+//
+// this.errors =[] → What exactly is wrong, and where?
+//  - Zero, one, or many
+//  - Field Specfic
+//  - Used by forms and programmatic logic

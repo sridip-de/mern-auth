@@ -18,8 +18,12 @@ export const LoginForm = () => {
   const { errors } = formState;
 
   const loginMutation = useLoginMutation({
-    onError: (error) => {
-      setError('email', { type: 'custom', message: error.message })
+    onError: (err) => {
+      err.errors.forEach(fieldError => {
+        Object.entries(fieldError).forEach(([field, value]) => {
+          setError(`${field}`, { type: 'custom', message: value })
+        })
+      });
     }
   });
 
@@ -80,10 +84,13 @@ export const LoginForm = () => {
             "
           // onChange={handleChange}
           />
+          <p className="text-red-500">{errors.password?.message}</p>
+
         </div>
 
         <button
           type='submit'
+          disabled={loginMutation.isPending}
           className={`
             w-full px-4 py-2.5
             ${loginMutation.isPending ? 'bg-blue-800' : 'bg-blue-500'}

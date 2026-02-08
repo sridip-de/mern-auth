@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {CONSTANTS } from '@/constants';
+import { CONSTANTS } from '@/constants';
 import TokenRefresher from '@/utils/tokenRefresher';
 
-import CustomError from '@/utils/errorHandler';
+import CustomError from '@/utils/errorConstructor';
 
 const axiosInstance = axios.create({
   baseURL: CONSTANTS.BASE_URL,

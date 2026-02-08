@@ -56,7 +56,11 @@ const register = asyncHandler(async (req, res, next) => {
   const tokens = await user.generateAccessAndRefreshToken();
 
   // Sending Welcome Message
-  await EMAIL_SERVICE.sendWelcomeEmail(createdUser.email, createdUser.name);
+  // We need to learn mongodb transaction and repoica set
+  // Or most modern pattern create use immediately and fire the email in background.
+  // Ot use a queue like BullMQ
+  //const emailRes = await EMAIL_SERVICE.sendWelcomeEmail(createdUser.email, createdUser.name);
+
 
   return res
     .cookie('refreshToken', tokens.refreshToken, COOKIE_OPTIONS.REFRESH_TOKEN_OPTIONS)
@@ -77,17 +81,24 @@ const login = asyncHandler(async (req, res, next) => {
 
   const { email, password } = req.body;
 
+  // This part have to be improved with a proper zod library
   if (!email?.trim() || !password?.trim()) {
-    return next(new ApiError(ErrorCodes.MISSING_FIELDS));
+    return next(new ApiError(ErrorCodes.MISSING_FIELDS,
+      null, [
+      !email?.trim() ? { email: 'Please Enter Email' } : { password: 'Please enter password' }
+    ]));
   }
 
   const user = await User.findOne({ email });
 
-  if (!user) return next(new ApiError(ErrorCodes.USER_NOT_FOUND));
+  if (!user) return next(new ApiError(ErrorCodes.USER_NOT_FOUND, null, [{ email: 'User not found' }]));
 
   const isPasswordValid = await user.comparePassword(password);
 
-  if (!isPasswordValid) return next(new ApiError(ErrorCodes.INVALID_CREDENTIALS));
+  if (!isPasswordValid) return next(new ApiError(ErrorCodes.INVALID_CREDENTIALS, null, [{
+    email: 'email or password is incorrect',
+    password: 'email or password is incorrect'
+  }]));
 
   const tokens = await user.generateAccessAndRefreshToken();
 

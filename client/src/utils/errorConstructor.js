@@ -4,6 +4,7 @@ class CustomError {
     this.message = error.response?.data?.message || 'An unexpected error occured';
     this.statusCode = error.response?.status;
     this.code = error.code;
+    this.errors = error.response?.data?.errors || null;
     this.isNetworkError = !error.response;
   }
 
@@ -45,6 +46,7 @@ class CustomError {
       message: this.getMessage(),
       statusCode: this.statusCode,
       code: this.code,
+      errors: this.errors,
       isNetworkError: this.isNetworkError,
       isClientError: this.setClientError(),
     }
