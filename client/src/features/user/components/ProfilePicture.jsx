@@ -13,8 +13,6 @@ const ProfilePicture = () => {
   const [progress, setProgress] = useState(0);
   const queryClient = useQueryClient();
 
-  console.log(user.data?.data?.picture);
-
   const mutation = useMutation({
     mutationFn: (file) => uploadImage({ file, onProgress: setProgress }),
     onSuccess: (res) => {
