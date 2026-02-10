@@ -21,10 +21,15 @@ class TokenRefresher {
     const responseData = error.response?.data;
     const errorCode = responseData?.errorCode;
 
-    console.log(errorCode);
+    console.log(error);
 
     // If no response data, Backend is not sending data
     if (!responseData) return Promise.reject(error);
+
+    // If Too meny requst error then stop 
+    if (errorCode === 429 || errorCode === "TOO_MANY_REQUESTS") {
+      return Promise.reject(error);
+    }
 
     // Prevent intercepting the refresh request itself
     if (originalRequest.url?.includes('/auth/refresh')) {

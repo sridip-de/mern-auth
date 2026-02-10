@@ -83,6 +83,12 @@ export const ErrorCodes = {
     message: 'Resource not found'
   },
 
+  TOO_MANY_REQUESTS: {
+    code: 'TOO_MANY_REQUESTS',
+    httpStatus: 429,
+    message: 'Too many request, Please try again after some time'
+  },
+
   // Server errors (5xx)
   INTERNAL_SERVER_ERROR: {
     code: 'INTERNAL_SERVER_ERROR',

@@ -2,8 +2,7 @@ import { useRef, useState } from "react";
 import { useFetchUser } from "../hooks/useUser";
 import { useMutation } from "@tanstack/react-query";
 import { uploadImage } from "../services/mediaService";
-import { useQueryClient } from "@tanstack/react-query";
-
+import { queryClient } from "@/config/query.config";
 
 import { FaCamera } from 'react-icons/fa';
 
@@ -11,7 +10,6 @@ const ProfilePicture = () => {
 
   const { data: user, isLoading } = useFetchUser();
   const [progress, setProgress] = useState(0);
-  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: (file) => uploadImage({ file, onProgress: setProgress }),
