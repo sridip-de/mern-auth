@@ -1,6 +1,8 @@
 import { useFetchUser } from "@/features/user";
 import Loader from "@/components/common/Loader/Loader";
 
+import ProfilePicture from "@/features/user/components/ProfilePicture";
+
 const Home = () => {
 
   const { data: user, isLoading } = useFetchUser();
@@ -26,11 +28,7 @@ const Home = () => {
     items-center
     text-center
   ">
-        <img
-          src={user?.data?.data?.picture}
-          className="rounded-full mb-3 sm:mb-4 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28"
-          alt="Profile"
-        />
+        <ProfilePicture />
         <span className="text-4xl sm:text-8xl md:text-6xl mb-2">👋️</span>
         <span>Hey! {user?.data ? user.data.data.name : "Developer"}</span>
       </div>
