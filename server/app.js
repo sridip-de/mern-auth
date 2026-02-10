@@ -9,9 +9,9 @@ import { limiter } from './src/middlewares/rateLimiter.middleware.js';
 const app = express();
 // Middleware setup
 app.use(helmet());
-app.use(limiter);
 app.use(cookieParser());
 app.use(cors(CORS_CONFIG));
+app.use(limiter);
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
