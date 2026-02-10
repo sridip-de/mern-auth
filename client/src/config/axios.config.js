@@ -6,7 +6,7 @@ import CustomError from '@/utils/errorConstructor';
 
 const axiosInstance = axios.create({
   baseURL: CONSTANTS.BASE_URL,
-  timeout: 5000,
+  timeout: 20000,
   withCredentials: true,
 });
 
