@@ -5,6 +5,7 @@ import { uploadImage } from "../services/mediaService";
 import { queryClient } from "@/config/query.config";
 
 import { FaCamera } from 'react-icons/fa';
+import { toast } from "react-toastify";
 
 const ProfilePicture = () => {
 
@@ -20,7 +21,10 @@ const ProfilePicture = () => {
         picture
       }));
     },
-    onError: (error) => console.log(error)
+    onError: (error) => {
+      console.log(error);
+      toast.error(error.message)
+    }
   })
 
   const fileInputRef = useRef(null);

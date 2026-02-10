@@ -8,11 +8,12 @@ const Home = () => {
   if (isLoading) return <Loader />
 
   if (isError) {
-    //const errorCode = error?.errorCode;
+    console.log(error);
+    const errorCode = error?.errorCode;
 
-    //if (errorCode === 429 || errorCode === "TOO_MANY_REQUESTS") {
-    return (
-      <div className="
+    if (errorCode === 429 || errorCode === "TOO_MANY_REQUESTS") {
+      return (
+        <div className="
           bg-zinc-800
           flex flex-col
           items-center
@@ -20,14 +21,14 @@ const Home = () => {
           h-[calc(100vh-60px)]
           px-4
         ">
-        <div className="text-center text-zinc-100">
-          <h2 className="text-2xl sm:text-3xl mb-4">⏱️ Too Many Requests</h2>
-          <p className="text-zinc-400 mb-6">
-            {error?.message || "Please wait a moment before trying again."}
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="
+          <div className="text-center text-zinc-100">
+            <h2 className="text-2xl sm:text-3xl mb-4">⏱️ Too Many Requests</h2>
+            <p className="text-zinc-400 mb-6">
+              {error?.message || "Please wait a moment before trying again."}
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="
                 px-6 py-3
                 border-2 border-zinc-600
                 text-zinc-100
@@ -37,20 +38,31 @@ const Home = () => {
                 transition-colors
                 font-medium
               "
-          >
-            Retry
-          </button>
+            >
+              Retry
+            </button>
+          </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  //   return (
-  //     <div className="text-center text-zinc-100 p-4">
-  //       <p>Error: {error?.message || "Something went wrong"}</p>
-  //     </div>
-  //   );
-  // }
+    // return (
+    //   <div className="bg-zinc-800
+    //       flex flex-col
+    //       items-center
+    //       justify-center
+    //       h-[calc(100vh-60px)]
+    //       px-4
+    //   ">
+    //     <p className="
+    //       border-l-4 border-l-red-500
+    //       bg-red-300
+    //       opacity-80
+    //       p-4"
+    //     >Error: {error?.message || "Something went wrong"}</p>
+    //   </div>
+    // );
+  }
 
   return (
     <div className="
