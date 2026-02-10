@@ -4,14 +4,22 @@ import jwt from 'jsonwebtoken';
 import ApiError from '../utils/apiError.constructor.js';
 
 const userSchema = new mongoose.Schema({
-  name:{type: String, required: true},
-  email:{type: String, required: true, unique: true},
-  password:{type: String, required: true},
-  picture:{type: String, default: null},
-  verifyOtp:{type: String, default: null}, // 01234 Number will cause 1234 so use String instead
-  verifyOtpExpireAt:{type: Number, default:0},
-  isAccountVerified:{type: Boolean, default:false},
-  refreshToken: {type: String, default:""},
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  picture: {
+    public_id: { type: String },
+    url: { type: String },
+    width: Number,
+    height: Number,
+    format: String,
+    bytes: Number,
+    created_at: String,
+  },
+  verifyOtp: { type: String, default: null }, // 01234 Number will cause 1234 so use String instead
+  verifyOtpExpireAt: { type: Number, default: 0 },
+  isAccountVerified: { type: Boolean, default: false },
+  refreshToken: { type: String, default: "" },
 })
 
 // Middlewares
@@ -35,9 +43,9 @@ userSchema.methods.getAccessToken = function () {
 
 userSchema.methods.getRefreshToken = function () {
   return jwt.sign(
-    { _id: this._id,},
+    { _id: this._id, },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: process.env.REFRESH_TOKEN_LIFE}
+    { expiresIn: process.env.REFRESH_TOKEN_LIFE }
   )
 }
 
@@ -45,18 +53,18 @@ userSchema.methods.generateAccessAndRefreshToken = async function () {
   try {
     const accessToken = this.getAccessToken();
     const refreshToken = this.getRefreshToken();
-  
+
     this.refreshToken = refreshToken;
-    await this.save({validateBeforeSave: false});
-    
+    await this.save({ validateBeforeSave: false });
+
     return { accessToken, refreshToken };
   } catch (error) {
-    throw new ApiError(500,"Token Generation Failed");
+    throw new ApiError(500, "Token Generation Failed");
   }
 }
 
 
-const userModel = mongoose.models.user || mongoose.model("user", userSchema); 
+const userModel = mongoose.models.user || mongoose.model("user", userSchema);
 // to prevent model overwrite issue in watch mode
 // mongoose.models contains all the registered models in cashe memory 
 // we check if the model already exists before creating a new one
