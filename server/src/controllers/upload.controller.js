@@ -3,17 +3,24 @@ import ErrorCodes from "../constants/errorCode.constants.js";
 import asyncHandler from "../utils/AsyncHandler.js"
 import uploadFromBuffer from "../configs/cloudinary.config.js";
 import ApiResponse from "../utils/apiResponse.constructor.js";
+import User from "../models/userModel.js";
 
 export const uploadImage = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
   if (!req.file) throw new ApiError(ErrorCodes.INVALID_INPUT);
 
   const result = await uploadFromBuffer(req.file.buffer);
 
   if (!result) throw new ApiError(ErrorCodes.INTERNAL_SERVER_ERROR);
 
+  const user = await User.findById(userId);
+
+  if (!user) throw new ApiError(ErrorCodes.INTERNAL_SERVER_ERROR);
+
   // Filtter sensitive data
   const safeData = {
-    pulic_id: result.pulic_id,
+    public_id: result.pulic_id,
     url: result.secure_url,
     width: result.width,
     height: result.height,
@@ -21,6 +28,10 @@ export const uploadImage = asyncHandler(async (req, res) => {
     bytes: result.bytes,
     created_at: result.created_at
   }
+
+  user.picture = safeData;
+
+  await user.save();
 
   return res
     .status(200)
