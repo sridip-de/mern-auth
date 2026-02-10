@@ -3,8 +3,8 @@ import ErrorCodes from '../constants/errorCode.constants.js';
 import ApiError from "../utils/apiError.constructor.js";
 
 export const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 50,
+  windowMs: 15 * 1000,
+  limit: 2,
   standardHeaders: 'draft-8',
   legacyHeaders: false,
   ipv6Subnet: 56,

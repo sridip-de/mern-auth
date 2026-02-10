@@ -7,9 +7,8 @@ import { queryClient } from "@/config/query.config";
 import { FaCamera } from 'react-icons/fa';
 import { toast } from "react-toastify";
 
-const ProfilePicture = () => {
+const ProfilePicture = ({ user }) => {
 
-  const { data: user, isLoading } = useFetchUser();
   const [progress, setProgress] = useState(0);
 
   const mutation = useMutation({
@@ -45,11 +44,12 @@ const ProfilePicture = () => {
     mutation.mutate(file);
   }
 
-
   return (
     <div
       onClick={handleImageClick}
       className="image-container group relative cursor-pointer mb-3 sm:mb-4" >
+
+      {console.log(mutation.isError)}
 
       <img
         src={
