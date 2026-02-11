@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 const ProfilePicture = ({ user }) => {
 
   const [progress, setProgress] = useState(0);
+  const fileInputRef = useRef(null);
 
   const mutation = useMutation({
     mutationFn: (file) => uploadImage({ file, onProgress: setProgress }),
@@ -25,8 +26,6 @@ const ProfilePicture = ({ user }) => {
       toast.error(error.message)
     }
   })
-
-  const fileInputRef = useRef(null);
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
