@@ -7,13 +7,12 @@ import ErrorCodes from "../constants/errorCode.constants.js";
 
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
-  //console.log(req.headers.cookie);
   const token = req.cookies?.accessToken;
   //console.log(token);
 
   if (!token) {
     //console.log('token is missing');
-    throw new ApiError(ErrorCodes.TOKEN_MISSING);
+    throw new ApiError(ErrorCodes.ACCESS_TOKEN_MISSING);
   }
 
   let decoded;

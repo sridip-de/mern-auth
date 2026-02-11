@@ -4,7 +4,7 @@ import ApiError from "../utils/apiError.constructor.js";
 
 export const limiter = rateLimit({
   windowMs: 15 * 1000,
-  limit: 2,
+  limit: 5,
   standardHeaders: 'draft-8',
   legacyHeaders: false,
   ipv6Subnet: 56,
