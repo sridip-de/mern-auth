@@ -22,6 +22,11 @@ export const ErrorCodes = {
     httpStatus: 401,
     message: 'Authentication token is required'
   },
+  ACCESS_TOKEN_MISSING: {
+    code: 'ACCESS_TOKEN_MISSING',
+    httpStatus: 401,
+    message: 'Authentication token is missing'
+  },
   UNAUTHORIZED: {
     code: 'UNAUTHORIZED',
     httpStatus: 401,

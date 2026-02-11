@@ -21,15 +21,10 @@ class TokenRefresher {
     const responseData = error.response?.data;
     const errorCode = responseData?.errorCode;
 
-    console.log(error);
 
     // If no response data, Backend is not sending data
     if (!responseData) return Promise.reject(error);
 
-    // If Too meny requst error then stop 
-    if (errorCode === 429 || errorCode === "TOO_MANY_REQUESTS") {
-      return Promise.reject(error);
-    }
 
     // Prevent intercepting the refresh request itself
     if (originalRequest.url?.includes('/auth/refresh')) {
@@ -41,6 +36,7 @@ class TokenRefresher {
       const isTokenExpired = errorCode === "TOKEN_EXPIRED";
       const isTokenInvalid = errorCode === "TOKEN_INVALID";
       const isTokenMissing = errorCode === "TOKEN_MISSING";
+      const isAccessTokenMissing = errorCode === 'ACCESS_TOKEN_MISSING';
 
       console.log('entered in 401 block:');
 
@@ -50,7 +46,7 @@ class TokenRefresher {
         // Window location to login page will be added later;
       }
 
-      if (isTokenExpired || !errorCode) {
+      if (isTokenExpired || !errorCode || isAccessTokenMissing) {
 
         if (this.isRefreshing) {
           return new Promise((resolve, reject) => {
